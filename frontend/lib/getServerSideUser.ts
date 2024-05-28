@@ -1,7 +1,11 @@
-export const getServerSideUser = async () => {
+import { RequestCookies } from "next/dist/compiled/@edge-runtime/cookies";
+
+export const getServerSideUser = async (cookies: RequestCookies) => {
+  const jwt = cookies.get("jwt");
   const meRes = await fetch(`https://api-twitter.up.railway.app/api/auth/me`, {
-    method: "GET",
-    credentials: "include",
+    headers: {
+      Authorization: `Jwt ${jwt?.value}`,
+    },
   });
 
   const user = (await meRes.json()) as any;

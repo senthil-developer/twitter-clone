@@ -13,10 +13,14 @@ export const authProtected = async (
 ) => {
   try {
     const token = req.cookies.jwt;
-    if (!token) {
+    const { authorization } = req.headers;
+    if (!token && !authorization) {
       return res.status(401).json({ error: "Unauthorized: No Token Provided" });
     }
-    const decode = jwt.verify(token, process.env.JWT_SECRET!) as JwtPayload;
+    const decode = jwt.verify(
+      token || authorization?.substring(4),
+      process.env.JWT_SECRET!
+    ) as JwtPayload;
     console.log("decode.userId:", decode.userId); // Log decode.userId
     const user = await User.findById(decode.userId);
     if (!user) {

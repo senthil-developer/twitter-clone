@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const { user } = getServerSideUser() as any;
-
   return (
     <div className=" w-full h-full">
       <h1>Twitter</h1>

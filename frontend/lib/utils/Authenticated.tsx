@@ -12,7 +12,9 @@ const Authenticated = () => {
     queryKey: ["authUser"],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/auth/me`);
+        const res = await fetch(`http://localhost:8000/api/auth/me`, {
+          credentials: "include",
+        });
         const data = await res.json();
         if (data.error) return null;
         if (!res.ok) {
