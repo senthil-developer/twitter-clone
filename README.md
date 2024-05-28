@@ -1,6 +1,3 @@
-Certainly! Here's the complete README.md file in markdown format:
-
-````markdown
 # Next.js Twitter Clone
 
 This GitHub repository contains the source code for a Twitter clone developed with Next.js 14 for the frontend and Express for the backend, entirely scripted in TypeScript.
@@ -40,7 +37,6 @@ This GitHub repository contains the source code for a Twitter clone developed wi
 - **Mongoose**: Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It provides a straightforward schema-based solution to model application data.
 - **JSON Web Tokens (JWT)**: JWT is used for user authentication and authorization in the backend.
 - **Cloudinary**: Cloudinary is used for image storage and manipulation in the backend.
-- **Nodemon**: Nodemon is used for automatically restarting the server during development.
 
 ## Getting Started
 
@@ -52,6 +48,7 @@ This GitHub repository contains the source code for a Twitter clone developed wi
 ```bash
 npm run dev
 ```
+
 ````
 
 ## Build
@@ -69,3 +66,4 @@ To start the production server, run:
 ```bash
 npm start
 ```
+````
