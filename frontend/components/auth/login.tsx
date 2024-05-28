@@ -35,7 +35,7 @@ const LoginPage = () => {
     // Provide types for useMutation
     mutationFn: async ({ usernameOrEmail, password }) => {
       try {
-        const res = await fetch(`${url}/api/auth/login`, {
+        const res = await fetch(`/api/auth/login`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

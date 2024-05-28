@@ -1,5 +1,5 @@
 export const getServerSideUser = async () => {
-  const meRes = await fetch(`http://localhost:8000/api/auth/me`, {
+  const meRes = await fetch(`https://api-twitter.up.railway.app/api/auth/me`, {
     method: "GET",
     credentials: "include",
   });

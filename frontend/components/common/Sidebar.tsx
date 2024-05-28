@@ -9,14 +9,15 @@ import { BiLogOut } from "react-icons/bi";
 import Link from "next/link";
 import Image from "next/image";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { UserTypes } from "../../../backend/src/models/user-model";
+import { User } from "@/types";
 import CldImage from "../CldImage";
 
 const Sidebar = () => {
   const dummyCldProfileImg =
     "https://res.cloudinary.com/djom8sxr6/image/upload/v1716385852/ueki1tqqaf3jxh15svib.png";
 
-  const { data } = useQuery<UserTypes>({ queryKey: ["authUser"] });
+  const { data } = useQuery<User>({ queryKey: ["authUser"] });
+
   const navItems = [
     {
       name: "Home",
