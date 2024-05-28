@@ -29,7 +29,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3000"],
+    origin: ["http://localhost:3000", "https://frontend-twitter.netlify.app"],
     credentials: true,
   })
 );
@@ -39,11 +39,7 @@ app.use("/api/users", user);
 app.use("/api/posts", post);
 app.use("/api/notification", notification);
 
-app.get("/", (req: Request, res: Response) => {
-  res.send(path.join(__dirname, "..", "public", "404.html"));
-});
-
-app.get("*", (req: Request, res: Response) => {
+app.use("*", (_, res: Response) => {
   res.status(404).sendFile(path.join(__dirname, "..", "public", "404.html"));
 });
 
