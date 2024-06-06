@@ -12,25 +12,25 @@ export const authProtected = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.cookies.jwt;
-    const { authorization } = req.headers;
-    if (!token && !authorization) {
+    const token = req.cookies.jwt || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
       return res.status(401).json({ error: "Unauthorized: No Token Provided" });
     }
-    const decode = jwt.verify(
-      token || authorization?.substring(4),
+
+    const decode = (await jwt.verify(
+      token,
       process.env.JWT_SECRET!
-    ) as JwtPayload;
-    console.log("decode.userId:", decode.userId); // Log decode.userId
+    )) as JwtPayload;
+
     const user = await User.findById(decode.userId);
     if (!user) {
       return res.status(404).json({ error: "Unauthorized: User not found" });
     }
     req.user = req.user || {};
-    req.user._id = user._id as string; // Assuming user._id is a string
+    req.user._id = user._id as string;
     next();
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+  } catch (error: any) {
+    next(error);
   }
 };

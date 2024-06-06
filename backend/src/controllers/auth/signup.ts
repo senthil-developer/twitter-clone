@@ -1,12 +1,18 @@
-import { type Request, type Response } from "express-serve-static-core";
+import {
+  type Request,
+  type Response,
+  NextFunction,
+} from "express-serve-static-core";
 import bcrypt from "bcryptjs";
-import user from "../../models/user-model";
-import { generateTokenAndSetCookie } from "../../lib/utils/generateToken";
-import { userResponse } from "../../lib/utils/userResponse";
+import User, { UserTypes } from "../../models/user-model";
 import { emailRegex } from "../../lib/utils/emailRegex";
-import { ObjectId } from "mongoose";
+import { generateTokenAndSendmail } from "../../lib/utils/generateTokenAndSendmail";
 
-export const signup = async (req: Request, res: Response) => {
+export const signup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const { fullName, username, email, password } = req.body;
     if (!fullName || !username || !email || !password) {
@@ -16,12 +22,12 @@ export const signup = async (req: Request, res: Response) => {
       emailRegex({ email, res });
     }
 
-    const existingEmail = await user.findOne({ email });
+    const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ error: "email already exists" });
     }
 
-    const existingUser = await user.findOne({ username });
+    const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ error: "User already exists" });
     }
@@ -31,24 +37,18 @@ export const signup = async (req: Request, res: Response) => {
         .json({ error: "password must be at least 8 characters length" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    console.log(hashedPassword);
-    const newUser = new user({
-      username,
+
+    generateTokenAndSendmail({
       email,
+      type: "createAcc",
+      username,
       fullName,
       password: hashedPassword,
     });
-    console.log(newUser);
-
-    if (newUser) {
-      generateTokenAndSetCookie({ userId: newUser._id as ObjectId, res });
-      await newUser.save();
-      userResponse({ userRes: newUser, res });
-    } else {
-      res.status(400).json({ error: "Invalid user data" });
-    }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(200).json({
+      message: `Verification mail sended to ${email}`,
+    });
+  } catch (error: any) {
+    next(error);
   }
 };

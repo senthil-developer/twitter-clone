@@ -36,7 +36,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
       if (newPassword) {
         if (newPassword.length < 8) {
-          return res.status(200).json({
+          return res.status(400).json({
             error: "new password password must be at least 8 characters length",
           });
         }

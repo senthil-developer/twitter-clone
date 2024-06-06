@@ -11,7 +11,7 @@ import { MdDriveFileRenameOutline } from "react-icons/md";
 import Link from "next/link";
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 interface SignUpData {
   username: string;
@@ -20,7 +20,13 @@ interface SignUpData {
   email: string;
 }
 
+interface Data {
+  message: string;
+}
+
 const SignUpPage = () => {
+  const router = useRouter();
+
   const [formData, setFormData] = useState({
     email: "",
     username: "",
@@ -32,8 +38,9 @@ const SignUpPage = () => {
     mutate: signUpMutation,
     isError,
     isPending,
+    data,
     error,
-  } = useMutation<void, Error, SignUpData>({
+  } = useMutation<Data, Error, SignUpData>({
     mutationFn: async ({ username, email, password, fullName }) => {
       try {
         const res = await fetch("/api/auth/signup", {
@@ -55,7 +62,8 @@ const SignUpPage = () => {
       }
     },
     onSuccess: () => {
-      toast.success("Signup successful");
+      toast.success(`${data?.message}`);
+      router.push("/create-account");
     },
   });
 
@@ -106,10 +114,17 @@ const SignUpPage = () => {
                 placeholder="Username"
                 name="username"
                 onChange={handleInputChange}
-                value={formData.username}
+                value={formData.username
+                  .trim()
+                  .replace(/-/g, "")
+                  .replace(/ /g, "-")
+                  .replace(/[^\w-]+/g, "")}
               />
             </label>
-            <label className="input input-bordered rounded flex items-center gap-2 flex-1 bg-slate-200 dark:bg-gray-200 text-black">
+            <label
+              className="input input-bordered rounded f
+            lex items-center gap-2 flex-1 bg-slate-200 dark:bg-gray-200 text-black"
+            >
               <MdDriveFileRenameOutline className="fill-black" />
               <input
                 type="text"

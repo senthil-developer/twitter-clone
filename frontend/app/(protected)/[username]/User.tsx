@@ -12,7 +12,6 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { IoCalendarOutline } from "react-icons/io5";
 import { FaLink } from "react-icons/fa";
 import { MdEdit } from "react-icons/md";
-import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import CldImage from "@/components/CldImage";
 import Image from "next/image";
@@ -23,15 +22,13 @@ import { useRouter } from "next/navigation";
 export const UserProfile = ({ username }: { username: string }) => {
   const router = useRouter();
 
-  const dummyCldProfileImg =
-    "https://res.cloudinary.com/djom8sxr6/image/upload/v1716385852/ueki1tqqaf3jxh15svib.png";
-  const dummyCldBannerImg =
-    "https://res.cloudinary.com/djom8sxr6/image/upload/v1716386529/zokftm0v9oyxazvhy5ex.jpg";
+  const dummyCldProfileImg = "v1716385852/ueki1tqqaf3jxh15svib";
+  const dummyCldBannerImg = "v1716386529/zokftm0v9oyxazvhy5ex";
 
   const { data: user, isLoading } = useQuery({
     queryKey: ["userProfile"],
     queryFn: async () => {
-      https: try {
+      try {
         const res = await fetch(`/api/users/profile/${username}`);
         const data = await res.json();
 

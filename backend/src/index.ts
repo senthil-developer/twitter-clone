@@ -11,6 +11,7 @@ import cookieParser from "cookie-parser";
 import morgan from "morgan";
 import path from "path";
 import "dotenv/config";
+import { errorMiddleware } from "./middleware/errorMiddleware";
 
 const app = express();
 
@@ -30,7 +31,7 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://frontend-twitter.netlify.app"],
+    origin: [process.env.FRONTEND_URL!],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   })
@@ -40,6 +41,8 @@ app.use("/api/auth", auth);
 app.use("/api/users", user);
 app.use("/api/posts", post);
 app.use("/api/notification", notification);
+
+app.use(errorMiddleware);
 
 app.use("*", (_, res: Response) => {
   res.status(404).sendFile(path.join(__dirname, "..", "public", "404.html"));

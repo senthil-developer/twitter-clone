@@ -1,5 +1,4 @@
 import HomePage from "@/compone/feed";
-import { getServerSideUser } from "@/lib/getServerSideUser";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {

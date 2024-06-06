@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import LoginPage from "@/components/auth/login";
+import LoginPage from "./loginPage";
 
 export const metadata: Metadata = {
   title: "Login",
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 const login = () => {
   return (
-    <div className="max-w-7xl">
+    <div>
       <LoginPage />
     </div>
   );

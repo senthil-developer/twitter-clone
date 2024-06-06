@@ -1,46 +1,44 @@
 "use client";
 
-import { ChangeEvent, FormEvent, useState } from "react";
-
-import XSvg from "@/components/svgs/X";
-import { MdOutlineMail } from "react-icons/md";
-import { MdPassword } from "react-icons/md";
+import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import { ChangeEvent, FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import { MdPassword } from "react-icons/md";
 
-interface LoginData {
-  usernameOrEmail: string;
+interface resetData {
   password: string;
+  confirmPassword: string;
 }
 
-const LoginPage = () => {
+interface Data {
+  message: string;
+}
+
+export const ResetPassword = ({ verify }: { verify: string }) => {
   const router = useRouter();
 
   const [formData, setFormData] = useState({
-    usernameOrEmail: "",
     password: "",
+    confirmPassword: "",
   });
 
-  const queryClient = useQueryClient();
-
   const {
-    mutate: loginMutation,
+    mutate: resetPasswordMutation,
     isError,
     data,
     error,
     isPending,
-  } = useMutation<void, Error, LoginData>({
-    // Provide types for useMutation
-    mutationFn: async ({ usernameOrEmail, password }) => {
+  } = useMutation<Data, Error, resetData>({
+    mutationFn: async ({ password, confirmPassword }) => {
       try {
-        const res = await fetch(`/api/auth/login`, {
+        const res = await fetch(`/api/auth/reset-password?verify=${verify}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ usernameOrEmail, password }),
+          body: JSON.stringify({ password, confirmPassword }),
         });
         const data = await res.json();
 
@@ -48,54 +46,35 @@ const LoginPage = () => {
         if (!res.ok) throw new Error(data.error);
 
         return data;
-      } catch (error) {
-        throw error;
+      } catch (err) {
+        throw err;
       }
     },
-    onSuccess: () => {
-      toast.success("Login Successful");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
-      router.push("/");
+    onSuccess() {
+      toast.success("Your Password Reset Successfully & now login");
+      router.push("/login");
     },
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    loginMutation({
-      usernameOrEmail: formData.usernameOrEmail,
+    resetPasswordMutation({
       password: formData.password,
+      confirmPassword: formData.confirmPassword,
     });
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
   return (
-    <div className="max-w-screen-xl mx-auto flex h-screen">
-      <div className="flex-1 hidden lg:flex  items-center  justify-center">
-        <XSvg className="lg:w-2/3 dark:fill-white fill-black" />
-      </div>
+    <div>
       <div className="flex-1 flex flex-col justify-center items-center ">
         <form
           className="mx-auto md:mx-20 flex gap-4 flex-col"
           onSubmit={handleSubmit}
           method="POST"
         >
-          <XSvg className="w-24 lg:hidden dark:fill-white fill-black" />
-          <h1 className="text-4xl font-extrabold ">{"Let's"} go.</h1>
-          <label className="input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
-            <MdOutlineMail className="fill-black" />
-            <input
-              type="text"
-              className="grow"
-              placeholder="username  or email"
-              name="usernameOrEmail"
-              onChange={handleInputChange}
-              value={formData.usernameOrEmail}
-            />
-          </label>
-
           <label className=" input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
             <MdPassword className="fill-black" />
             <input
@@ -107,21 +86,36 @@ const LoginPage = () => {
               value={formData.password}
             />
           </label>
+
+          <label className=" input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
+            <MdPassword className="fill-black" />
+            <input
+              type="password"
+              className="grow"
+              placeholder="confirmPassword"
+              name="confirmPassword"
+              onChange={handleInputChange}
+              value={formData.confirmPassword}
+            />
+          </label>
           <button className="btn rounded-full btn-primary">
-            {isPending ? "Loading..." : "Login"}
+            {isPending ? "Loading..." : "Reset Your Password"}
           </button>
           {isError && <p className="text-red-500">{error?.message}</p>}
         </form>
         <div className="flex flex-col gap-2 mt-4 lg:w-2/3">
+          <Link href={"/login"} className="underline">
+            back to login
+          </Link>
           <p className=" text-lg">{"Don't"} have an account?</p>
           <Link href="/signup">
-            <button className="btn rounded-full btn-primary btn-outline ">
+            <button className="btn rounded-full btn-secondary btn-outline ">
               Sign up
             </button>
           </Link>
         </div>
       </div>
+      <div className="flex-1">{data && <p>{data?.message}</p>}</div>
     </div>
   );
 };
-export default LoginPage;

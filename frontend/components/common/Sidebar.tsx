@@ -13,8 +13,7 @@ import { User } from "@/types";
 import CldImage from "../CldImage";
 
 const Sidebar = () => {
-  const dummyCldProfileImg =
-    "https://res.cloudinary.com/djom8sxr6/image/upload/v1716385852/ueki1tqqaf3jxh15svib.png";
+  const dummyCldProfileImg = "v1716385852/ueki1tqqaf3jxh15svib";
 
   const { data } = useQuery<User>({ queryKey: ["authUser"] });
 
@@ -95,11 +94,9 @@ const Sidebar = () => {
               className="mt-auto mb-10 flex gap-2 items-start transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full"
             >
               <div className="flex w-full">
-                <div className="size-8 rounded-full relative bg-red-500 ">
+                <div className="size-8 rounded-full relative bg-sky-300 ">
                   <CldImage
-                    src={
-                      "v1716365415/jpvmtpt99f8caloixvxp" || dummyCldProfileImg
-                    }
+                    src={data.profileImg || dummyCldProfileImg}
                     className="h-52 w-full object-cover"
                     alt="profile image"
                     fill

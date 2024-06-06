@@ -23,16 +23,11 @@ const userSchema: Schema<UserTypes> = new mongoose.Schema(
       required: true,
       unique: true,
       trim: true,
-      validate: {
-        validator: function (v: string) {
-          return !/\s/.test(v); // Ensure there are no spaces in the username
-        },
-        message: (props) => `${props.value} cannot contain spaces`,
-      },
     },
     fullName: {
       type: String,
       required: true,
+      trim: true,
     },
     email: {
       type: String,
@@ -43,7 +38,6 @@ const userSchema: Schema<UserTypes> = new mongoose.Schema(
       type: String,
       required: true,
       select: false,
-      minLength: 8,
     },
     followers: [
       {

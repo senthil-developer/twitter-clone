@@ -1,6 +1,4 @@
 import type { Config } from "tailwindcss";
-import daisyui from "daisyui";
-import daisyUiThemes from "daisyui/src/theming/themes";
 
 const config = {
   darkMode: ["class"],
@@ -26,14 +24,8 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
-        primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
-        },
-        secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
-        },
+        primary: "rgb(29, 155, 240)",
+        secondary: "rgb(24, 24, 24)",
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
@@ -76,19 +68,7 @@ const config = {
       },
     },
   },
-  plugins: [daisyui],
-  daisyui: {
-    themes: [
-      "light",
-      {
-        dark: {
-          ...daisyUiThemes["dark"],
-          primary: "rgb(29, 155, 240)",
-          secondary: "rgb(24, 24, 24)",
-        },
-      },
-    ],
-  },
+  plugins: [require("daisyui")],
 };
 
 export default config;
