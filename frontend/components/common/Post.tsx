@@ -1,175 +1,172 @@
-"use client";
+'use client'
 
-import { FaRegComment } from "react-icons/fa";
-import { BiRepost } from "react-icons/bi";
-import { FaRegHeart } from "react-icons/fa";
-import { FaRegBookmark } from "react-icons/fa6";
-import { FaTrash } from "react-icons/fa";
-import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
+import CldImage from '../CldImage'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useState } from 'react'
+import { toast } from 'react-hot-toast'
+import { BiRepost } from 'react-icons/bi'
+import { FaRegComment } from 'react-icons/fa'
+import { FaRegHeart } from 'react-icons/fa'
+import { FaTrash } from 'react-icons/fa'
+import { FaRegBookmark } from 'react-icons/fa6'
 
-import LoadingSpinner from "./LoadingSpinner";
-import { formatPostDate } from "@/lib/utils/date";
-import Link from "next/link";
-import CldImage from "../CldImage";
-import Image from "next/image";
+import { formatPostDate } from '@/lib/utils/date'
+
+import LoadingSpinner from './LoadingSpinner'
 
 interface PostType {
-  _id: string;
-  text: string;
-  img?: string;
+  _id: string
+  text: string
+  img?: string
   user: {
-    _id: string;
-    fullName: string;
-    username: string;
-    profileImg?: string;
-  };
-  createdAt: string; // You might want to change this to Date if you're using Date objects
-  likes: string[];
+    _id: string
+    fullName: string
+    username: string
+    profileImg?: string
+  }
+  createdAt: string // You might want to change this to Date if you're using Date objects
+  likes: string[]
   comments: {
-    _id: string;
-    text: string;
+    _id: string
+    text: string
     user: {
-      _id: string;
-      fullName: string;
-      username: string;
-      profileImg?: string;
-    };
-  }[];
+      _id: string
+      fullName: string
+      username: string
+      profileImg?: string
+    }
+  }[]
 }
 
 interface Props {
-  post: PostType;
+  post: PostType
 }
-interface AuthUserType {
-  _id: string;
-  fullName: string;
-  username: string;
-  profileImg?: string;
+export interface AuthUserType {
+  _id: string
+  fullName: string
+  username: string
+  profileImg?: string
 }
 interface CommentType {
-  _id: string;
-  text: string;
+  _id: string
+  text: string
   user: {
-    _id: string;
-    fullName: string;
-    username: string;
-    profileImg?: string;
-  };
+    _id: string
+    fullName: string
+    username: string
+    profileImg?: string
+  }
 }
 
 const Post: React.FC<Props> = ({ post }) => {
-  const [comment, setComment] = useState("");
-  const { data: authUser } = useQuery<AuthUserType>({ queryKey: ["authUser"] });
-  const queryClient = useQueryClient();
-  const postOwner = post.user;
-  const isLiked = post.likes.includes(authUser?._id!);
+  const [comment, setComment] = useState('')
+  const { data: authUser } = useQuery<AuthUserType>({ queryKey: ['authUser'] })
+  const queryClient = useQueryClient()
+  const postOwner = post.user
+  const isLiked = post.likes.includes(authUser?._id!)
 
-  const isMyPost = authUser?._id === post?.user._id;
+  const isMyPost = authUser?._id === post?.user._id
 
-  const formattedDate = formatPostDate(post.createdAt);
+  const formattedDate = formatPostDate(post.createdAt)
 
   const { mutate: deletePost, isPending: isDeleting } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch(`/api/posts/${post._id}`, {
-          method: "DELETE",
-        });
-        const data = await res.json();
+          method: 'DELETE',
+        })
+        const data = await res.json()
 
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          throw new Error(data.error || 'Something went wrong')
         }
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: () => {
-      toast.success("Post deleted successfully");
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success('Post deleted successfully')
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
-  });
+  })
 
   const { mutate: likePost, isPending: isLiking } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch(`/api/posts/like/${post._id}`, {
-          method: "POST",
-        });
-        const data = await res.json();
+          method: 'POST',
+        })
+        const data = await res.json()
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          throw new Error(data.error || 'Something went wrong')
         }
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: (updatedLikes) => {
-      // this is not the best UX, bc it will refetch all posts
-      // queryClient.invalidateQueries({ queryKey: ["posts"] });
-
-      // instead, update the cache directly for that post
-      queryClient.setQueryData(["posts"], (oldData: any) => {
+      queryClient.setQueryData(['posts'], (oldData: any) => {
         return oldData.map((p: any) => {
           if (p._id === post._id) {
-            return { ...p, likes: updatedLikes };
+            return { ...p, likes: updatedLikes }
           }
-          return p;
-        });
-      });
+          return p
+        })
+      })
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message)
     },
-  });
+  })
 
   const { mutate: commentPost, isPending: isCommenting } = useMutation({
     mutationFn: async () => {
       try {
         const res = await fetch(`/api/posts/comment/${post._id}`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ text: comment }),
-        });
-        const data = await res.json();
+        })
+        const data = await res.json()
 
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          throw new Error(data.error || 'Something went wrong')
         }
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: () => {
-      toast.success("Comment posted successfully");
-      setComment("");
-      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      toast.success('Comment posted successfully')
+      setComment('')
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
     onError: (error) => {
-      toast.error(error.message);
+      toast.error(error.message)
     },
-  });
+  })
 
   const handleDeletePost = () => {
-    deletePost();
-  };
+    deletePost()
+  }
 
   const handlePostComment = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (isCommenting) return;
-    commentPost();
-  };
+    e.preventDefault()
+    if (isCommenting) return
+    commentPost()
+  }
 
   const handleLikePost = () => {
-    if (isLiking) return;
-    likePost();
-  };
+    if (isLiking) return
+    likePost()
+  }
 
   return (
     <>
@@ -180,8 +177,8 @@ const Post: React.FC<Props> = ({ post }) => {
             className="w-8 rounded-full overflow-hidden"
           >
             <CldImage
-              src={postOwner.profileImg || "/avatar-placeholder.png"}
-              alt={postOwner.fullName + "user image"}
+              src={postOwner.profileImg || '/avatar-placeholder.png'}
+              alt={postOwner.fullName + 'user image'}
             />
           </Link>
         </div>
@@ -212,7 +209,7 @@ const Post: React.FC<Props> = ({ post }) => {
             {post.img && (
               <CldImage
                 src={post.img}
-                className="h-80 object-contain rounded-lg border border-gray-700"
+                className="h-80 object-cover rounded-lg border border-gray-700"
                 alt=""
               />
             )}
@@ -223,10 +220,10 @@ const Post: React.FC<Props> = ({ post }) => {
                 className="flex gap-1 items-center cursor-pointer group"
                 onClick={() => {
                   const modal = document.getElementById(
-                    "comments_modal" + post._id
-                  ) as HTMLDialogElement | null;
+                    'comments_modal' + post._id
+                  ) as HTMLDialogElement | null
                   if (modal) {
-                    modal.showModal();
+                    modal.showModal()
                   }
                 }}
               >
@@ -255,9 +252,9 @@ const Post: React.FC<Props> = ({ post }) => {
                             <CldImage
                               src={
                                 comment.user.profileImg ||
-                                "/avatar-placeholder.png"
+                                '/avatar-placeholder.png'
                               }
-                              alt={comment.user.username + "image"}
+                              alt={comment.user.username + 'image'}
                             />
                           </div>
                         </div>
@@ -286,7 +283,7 @@ const Post: React.FC<Props> = ({ post }) => {
                       onChange={(e) => setComment(e.target.value)}
                     />
                     <button className="btn btn-primary rounded-full btn-sm text-white px-4">
-                      {isCommenting ? <LoadingSpinner size="md" /> : "Post"}
+                      {isCommenting ? <LoadingSpinner size="md" /> : 'Post'}
                     </button>
                   </form>
                 </div>
@@ -314,7 +311,7 @@ const Post: React.FC<Props> = ({ post }) => {
 
                 <span
                   className={`text-sm  group-hover:text-pink-500 ${
-                    isLiked ? "text-pink-500" : "text-slate-500"
+                    isLiked ? 'text-pink-500' : 'text-slate-500'
                   }`}
                 >
                   {post.likes.length}
@@ -328,6 +325,6 @@ const Post: React.FC<Props> = ({ post }) => {
         </div>
       </div>
     </>
-  );
-};
-export default Post;
+  )
+}
+export default Post

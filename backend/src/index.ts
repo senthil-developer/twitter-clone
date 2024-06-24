@@ -40,7 +40,7 @@ app.use(
 app.use("/api/auth", auth);
 app.use("/api/users", user);
 app.use("/api/posts", post);
-app.use("/api/notification", notification);
+app.use("/api/notifications", notification);
 
 app.use(errorMiddleware);
 

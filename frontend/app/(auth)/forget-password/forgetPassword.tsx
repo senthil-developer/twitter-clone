@@ -1,12 +1,13 @@
 "use client";
 
-import XSvg from "@/components/svgs/X";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { MdOutlineMail } from "react-icons/md";
 import { useRouter } from "next/navigation";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface forgetData {
   usernameOrEmail: string;
@@ -66,40 +67,40 @@ export const ForgetPassword = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col justify-center items-center ">
-      <form
-        className="mx-auto md:mx-20 flex gap-4 flex-col"
-        onSubmit={handleSubmit}
-        method="POST"
-      >
-        <XSvg className="w-24 lg:hidden dark:fill-white fill-black" />
-        <h1 className="text-4xl font-extrabold ">{"Let's"} go.</h1>
-        <label className="input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
-          <MdOutlineMail className="fill-black" />
-          <input
-            type="text"
-            className="grow"
-            placeholder="username  or email"
-            name="usernameOrEmail"
-            onChange={handleInputChange}
-            value={formData.usernameOrEmail}
-          />
-        </label>
-
-        <button className="btn rounded-full btn-primary">
-          {isPending ? "Loading..." : "Login"}
-        </button>
-        {isError && <p className="text-red-500">{error?.message}</p>}
-      </form>
-      <div className="flex flex-col gap-2 mt-4 lg:w-2/3">
-        <p className=" text-lg">{"Don't"} have an account?</p>
-        <Link href="/signup">
-          <button className="btn rounded-full btn-secondary btn-outline ">
-            Sign up
-          </button>
-        </Link>
+    <div className="mx-auto max-w-md space-y-6">
+      <div className="space-y-2 text-center">
+        <h1 className="text-3xl font-bold">Forgot Password</h1>
+        <p className="text-gray-500 dark:text-gray-400">
+          {
+            "Enter your username or email address and we'll send you a link to reset your password."
+          }
+        </p>
       </div>
-      <div>{data ? <p>{data?.message}</p> : null}</div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Username or Email</Label>
+          <Input
+            id="email"
+            type="text"
+            name="usernameOrEmail"
+            value={formData.usernameOrEmail}
+            onChange={handleInputChange}
+            placeholder="Enter your username or email"
+            required
+          />
+        </div>
+        <Button type="submit" disabled={isPending}>
+          {isPending ? "Sending..." : "Send Email"}
+        </Button>
+        {data && (
+          <p className="text-green-500">
+            Password reset email has been sent. Please check your inbox.
+          </p>
+        )}
+        {isError && (
+          <p className="text-red-500">{error?.message || "Unknown error"}</p>
+        )}
+      </form>
     </div>
   );
 };

@@ -21,9 +21,13 @@ export const likeUnlikePost = async (req: Request, res: Response) => {
       // const r = await Post.updateOne({_id:postId},{pull :{likes : userId}})
       await Post.updateOne({ _id: postId }, { $pull: { likes: userId } });
       await User.updateOne({ _id: userId }, { $pull: { likedPosts: postId } });
+
+      const updatedLikes = post.likes?.filter(
+        (id) => id.toString() !== userId?.toString()
+      );
       // i want do delete notification when i dislike post
 
-      res.status(200).json({ error: "un liked post" });
+      res.status(200).json(updatedLikes);
     } else {
       post.likes?.push(userId as unknown as Types.ObjectId);
       await User.updateOne({ _id: userId }, { $push: { likedPosts: postId } });
@@ -35,7 +39,8 @@ export const likeUnlikePost = async (req: Request, res: Response) => {
         type: "like",
       });
       await notification.save();
-      res.status(200).json({ error: "Liked post" });
+      const updatedLikes = post.likes;
+      res.status(200).json(updatedLikes);
     }
   } catch (error) {
     res.status(500).json({ error: error });

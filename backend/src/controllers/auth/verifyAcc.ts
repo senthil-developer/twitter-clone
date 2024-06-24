@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from "express-serve-static-core";
 import User from "../../models/user-model";
 import { code } from "../../lib/utils/sendMail";
-import { email } from "./login";
+// import { email } from "./login";
 import { generateTokenAndSetCookie } from "../../lib/utils/generateToken";
 import { ObjectId } from "mongoose";
 
 export const Verify = async (req: Request, res: Response) => {
   try {
     const { verificationCode } = req.body;
-
+    let email = "";
     if (!verificationCode)
       return res.status(400).json({ error: "Verification code is required" });
 

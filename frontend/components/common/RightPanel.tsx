@@ -1,12 +1,41 @@
-"use client";
+'use client'
 
-import RightPanelSkeleton from "../skeletons/RightPanelSkeleton";
-import { USERS_FOR_RIGHT_PANEL } from "@/lib/utils/db/dummy";
-import Image from "next/image";
-import Link from "next/link";
+import RightPanelSkeleton from '../skeletons/RightPanelSkeleton'
+import { useQuery } from '@tanstack/react-query'
+import Image from 'next/image'
+import Link from 'next/link'
+
+import { USERS_FOR_RIGHT_PANEL } from '@/lib/utils/db/dummy'
+
+import { useFollow } from '@/hooks/useFollow'
+import { User } from '@/types'
+
+type suggestedUser = User[]
 
 const RightPanel = () => {
-  const isLoading = false;
+  const { data, isLoading, error, isError } = useQuery<suggestedUser, Error>({
+    queryKey: ['suggestedUsers'],
+    queryFn: async () => {
+      try {
+        const res = await fetch(`/api/users/suggested`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
+        const data = await res.json()
+
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error(data.error)
+
+        return data
+      } catch (error) {
+        throw error
+      }
+    },
+  })
+  const { follow, isPending } = useFollow()
+
+  if (data?.length === 0) return <div className="md:w-64 w-0"></div>
 
   return (
     <div className="hidden lg:block my-4 mx-2">
@@ -23,7 +52,7 @@ const RightPanel = () => {
             </>
           )}
           {!isLoading &&
-            USERS_FOR_RIGHT_PANEL?.map((user: any) => (
+            data?.map((user: User) => (
               <Link
                 href={`/${user.username}`}
                 className="flex items-center justify-between gap-4"
@@ -35,7 +64,7 @@ const RightPanel = () => {
                       <Image
                         alt="user avatar"
                         fill
-                        src={user.profileImg || "/avatar-placeholder.png"}
+                        src={user.profileImg || '/avatar-placeholder.png'}
                       />
                     </div>
                   </div>
@@ -51,9 +80,12 @@ const RightPanel = () => {
                 <div>
                   <button
                     className="btn dark:bg-white  bg-black  hover:opacity-90 rounded-full btn-sm"
-                    onClick={(e) => e.preventDefault()}
+                    onClick={(e) => {
+                      e.preventDefault()
+                      follow(user._id)
+                    }}
                   >
-                    Follow
+                    {isPending ? 'Following' : 'Follow'}
                   </button>
                 </div>
               </Link>
@@ -61,6 +93,6 @@ const RightPanel = () => {
         </div>
       </div>
     </div>
-  );
-};
-export default RightPanel;
+  )
+}
+export default RightPanel

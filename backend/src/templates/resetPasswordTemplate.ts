@@ -1,205 +1,219 @@
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-export const ResetPasswordTemplate = (link: string) => `
-<!DOCTYPE html>
+// Read HTML file
+export const ResetPasswordTemplate = (link: string) => `<!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Your Password</title>
-<style>
- div.my-alert {
-  --tw-bg-opacity: 1;
-  background-color: rgb(var(--tw-color-gray-900) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: rgb(var(--tw-color-white) / var(--tw-text-opacity));
-  padding: var(--tw-size-8);
-  border-radius: var(--tw-border-radius-lg);
-}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reset Your Password</title>
+    <style>
+      /* Base styles */
+      .bg-gray-900 {
+        background-color: #1a202c;
+      }
 
-div.my-alert > div.my-alert__unique4 {
-  display: flex;
-  justify-content: center;
-  margin-bottom: var(--tw-size-8);
-}
+      .text-white {
+        color: #ffffff;
+      }
 
-div.my-alert > div > img {
-  border-radius: var(--tw-border-radius-full);
-  --tw-bg-opacity: 1;
-  background-color: rgb(var(--tw-color-yellow-500) / var(--tw-bg-opacity));
-  padding: var(--tw-size-2);
-}
+      .p-8 {
+        padding: 2rem;
+      }
 
-div.my-alert > div > div {
-  height: var(--tw-size-24);
-  width: var(--tw-size-24);
-  --tw-text-opacity: 1;
-  color: rgb(var(--tw-color-yellow-500) / var(--tw-text-opacity));
-}
+      .rounded-lg {
+        border-radius: 0.5rem;
+      }
 
-div.my-alert > div > div > svg {
-  width: 100%;
-  height: 100%;
-}
+      .flex {
+        display: flex;
+      }
 
-div.my-alert > h1 {
-  text-align: center;
-  font-weight: var(--tw-font-weight-bold);
-  font-size: var(--tw-font-size-2xl);
-  line-height: var(--tw-line-height-8);
-  margin-bottom: var(--tw-size-4);
-}
+      .justify-center {
+        justify-content: center;
+      }
 
-div.my-alert > p.my-alert__unique1 {
-  text-align: center;
-  margin-bottom: var(--tw-size-8);
-}
+      .mb-8 {
+        margin-bottom: 2rem;
+      }
 
-div.my-alert > div > button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  white-space: nowrap;
-  font-size: var(--tw-font-size-sm);
-  line-height: var(--tw-line-height-5);
-  /* Unknown class .ring-offset-background */
-  transition-property: color, background-color, border-color, fill, stroke,
-    -webkit-text-decoration-color;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke;
-  transition-property: color, background-color, border-color,
-    text-decoration-color, fill, stroke, -webkit-text-decoration-color;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
+      /* Logo image */
+      .img-rounded-full {
+        border-radius: 9999px; /* A very large value for full rounding */
+      }
 
-div.my-alert > div > button:focus-visible {
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
-    var(--tw-ring-offset-width) var(--tw-ring-offset-color);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
-    calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
-    var(--tw-shadow, 0 0 #0000);
-  /* Unknown class .ring-ring */
-  --tw-ring-offset-width: 2px;
-}
+      .bg-yellow-500 {
+        background-color: #f59e0b;
+      }
 
-div.my-alert > div > button:disabled {
-  pointer-events: none;
-  opacity: 0.5;
-}
+      .p-2 {
+        padding: 0.5rem;
+      }
 
-div.my-alert > div > button:hover {
-  background-color: rgb(var(--tw-color-primary) / 0.9);
-}
+      /* Header styles */
+      .text-2xl {
+        font-size: 1.5rem; /* Adjust as needed */
+      }
 
-div.my-alert > div > button {
-  height: var(--tw-size-10);
-  --tw-bg-opacity: 1;
-  background-color: rgb(var(--tw-color-yellow-500) / var(--tw-bg-opacity));
-  --tw-text-opacity: 1;
-  color: rgb(var(--tw-color-gray-900) / var(--tw-text-opacity));
-  font-weight: var(--tw-font-weight-bold);
-  padding-top: var(--tw-size-3);
-  padding-bottom: var(--tw-size-3);
-  padding-left: var(--tw-size-6);
-  padding-right: var(--tw-size-6);
-  border-radius: var(--tw-border-radius-default);
-}
+      .font-bold {
+        font-weight: bold;
+      }
 
-div.my-alert > p.my-alert__unique2 {
-  text-align: center;
-  font-size: var(--tw-font-size-sm);
-  line-height: var(--tw-line-height-5);
-  margin-bottom: var(--tw-size-4);
-}
+      /* Paragraph styles */
+      .text-center {
+        text-align: center;
+      }
 
-div.my-alert > p.my-alert__unique3 {
-  text-align: center;
-  font-size: var(--tw-font-size-xs);
-  line-height: var(--tw-line-height-4);
-  margin-bottom: var(--tw-size-8);
-}
+      /* Button styles */
+      .py-3 {
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+      }
 
-div.my-alert > p > a {
-  --tw-text-opacity: 1;
-  color: rgb(var(--tw-color-yellow-500) / var(--tw-text-opacity));
-  -webkit-text-decoration-line: underline;
-  text-decoration-line: underline;
-}
+      .px-6 {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+      }
 
-div.my-alert > div.my-alert__unique5 {
-  display: flex;
-  justify-content: center;
-  gap: var(--tw-size-4);
-  margin-bottom: var(--tw-size-8);
-}
+      .rounded {
+        border-radius: 0.25rem;
+      }
 
-div.my-alert > div > a {
-  height: var(--tw-size-6);
-  width: var(--tw-size-6);
-  --tw-text-opacity: 1;
-  color: rgb(var(--tw-color-yellow-500) / var(--tw-text-opacity));
-}
+      /* Links */
+      a {
+        color: #f59e0b;
+        text-decoration: underline;
+      }
 
-div.my-alert > div > a > svg {
-  width: 100%;
-  height: 100%;
-}
-</style>
-</head>
-<body>
-<div class="my-alert">
-  <div class="my-alert__unique4">
-    <img src="/placeholder.svg" alt="Your Logo" width="60" height="60" style="aspect-ratio: 60 / 60; object-fit: cover;">
-  </div>
-  <div class="my-alert__unique4">
-    <div>
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;">
-        <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-      </svg>
+      a:hover {
+        text-decoration: none;
+      }
+
+      /* Social icons */
+      .gap-4 {
+        gap: 1rem;
+      }
+
+      /* Footer */
+      .border-t {
+        border-top-width: 1px;
+      }
+
+      .pt-4 {
+        padding-top: 1rem;
+      }
+
+      /* Additional */
+      .text-xs {
+        font-size: 0.75rem; /* Adjust as needed */
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      style="
+        background-color: rgb(51, 51, 51);
+        color: rgb(255, 255, 255);
+        padding: 32px;
+        --darkreader-inline-bgcolor: #262a2b;
+        --darkreader-inline-color: #e8e6e3;
+      "
+      data-darkreader-inline-bgcolor=""
+      data-darkreader-inline-color=""
+    >
+      <div style="display: flex; justify-content: center; margin-bottom: 32px">
+        <img
+          src="/placeholder.svg"
+          alt="Your Logo"
+          width="60"
+          height="60"
+          style="
+            border-radius: 50%;
+            background-color: rgb(255, 255, 0);
+            padding: 8px;
+            aspect-ratio: 60 / 60;
+            object-fit: cover;
+            --darkreader-inline-bgcolor: #999900;
+          "
+          data-darkreader-inline-bgcolor=""
+        />
+      </div>
+      <div style="display: flex; justify-content: center; margin-bottom: 32px">
+        <div
+          style="
+            color: rgb(255, 255, 0);
+            height: 96px;
+            width: 96px;
+            --darkreader-inline-color: #ffff1a;
+          "
+          data-darkreader-inline-color=""
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            class="w-6 h-6"
+            data-darkreader-inline-fill=""
+            style="--darkreader-inline-fill: currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M12 1.5a5.25 5.25 0 00-5.25 5.25v3a3 3 0 00-3 3v6.75a3 3 0 003 3h10.5a3 3 0 003-3v-6.75a3 3 0 00-3-3v-3c0-2.9-2.35-5.25-5.25-5.25zm3.75 8.25v-3c0-2.09-1.66-3.75-3.75-3.75s-3.75 1.66-3.75 3.75v3h7.5z"
+              clip-rule="evenodd"
+            ></path>
+          </svg>
+        </div>
+      </div>
+      <h1
+        style="
+          text-align: center;
+          font-size: 24px;
+          font-weight: bold;
+          margin-bottom: 16px;
+        "
+      >
+        Forgot your password?
+      </h1>
+      <p style="text-align: center; margin-bottom: 32px">
+        Not to worry, we got you! Let's get you a new password.
+      </p>
+      <div style="display: flex; justify-content: center; margin-bottom: 32px">
+        <button
+          style="
+            background-color: rgb(255, 255, 0);
+            color: rgb(51, 51, 51);
+            font-weight: bold;
+            padding: 12px 24px;
+            border-radius: 4px;
+            --darkreader-inline-bgcolor: #999900;
+            --darkreader-inline-color: #c8c3bc;
+          "
+          data-darkreader-inline-bgcolor=""
+          data-darkreader-inline-color=""
+        >
+          RESET PASSWORD
+        </button>
+      </div>
+      <p style="text-align: center; margin-bottom: 16px; font-size: 14px">
+        If you didn't request to change your password, simply ignore this email.
+      </p>
+      <p style="text-align: center; margin-bottom: 32px; font-size: 12px">
+        This link will expire in 24 hours. If you continue to have problems
+        please feel free to contact us at
+        <a
+          href="mailto:twitter.acc.app@gmail.com"
+          style="
+            color: rgb(255, 255, 0);
+            text-decoration: underline;
+            --darkreader-inline-color: #ffff1a;
+          "
+          data-darkreader-inline-color=""
+          target="_blank"
+        >
+          twitter.acc.app@gmail.com
+        </a>
+      </p>
     </div>
-  </div>
-  <h1>Forgot your password?</h1>
-  <p class="my-alert__unique1">Not to worry, we got you! Let's get you a new password.</p>
-  <div class="my-alert__unique4">
-    <button>
-    <a href="${FRONTEND_URL}/reset-password?verify=${link}" target="_blank">
-      RESET PASSWORD
-    </button>
-  </div>
-  <p class="my-alert__unique2">If you didn\'t request to change your password, simply ignore this email.</p>
-  <p class="my-alert__unique3">
-    This link will expire in 24 hours. If you continue to have problems please feel free to contact us at{" "}
-    <a href="#">
-      twitter.acc.app@gmail.com
-    </a>
-  </p>
-  <div class="my-alert__unique5">
-    <a href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-      </svg>
-    </a>
-    <a href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;">
-        <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-      </svg>
-    </a>
-    <a href="#">
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-darkreader-inline-stroke="" style="--darkreader-inline-stroke: currentColor;">
-        <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-        <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-      </svg>
-    </a>
-    <a href="#"></a>
-  </div>
-</div>
-</body>
+  </body>
 </html>
-
-  `;
+`;

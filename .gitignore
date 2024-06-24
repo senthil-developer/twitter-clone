@@ -3,8 +3,12 @@
 /node_modules
 .env
 
-test.ts
+/practices
+
 error.log
+
+
+test.js
 
 # Logs
 

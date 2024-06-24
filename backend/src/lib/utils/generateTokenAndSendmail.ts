@@ -28,10 +28,9 @@ export const generateTokenAndSendmail = ({
       }
     );
     sendMail.createAcc({ userEmail: email, redirect_url: token });
-    console.log(token);
   } else {
     const token = jwt.sign({ email }, process.env.RESET_PASSWORD_JWT_SECRET!, {
-      expiresIn: "60s",
+      expiresIn: "600s",
     });
     sendMail.resetPassword({ userEmail: email, redirect_url: token });
   }

@@ -1,30 +1,32 @@
-"use client";
+'use client'
 
-import { ChangeEvent, FormEvent, useRef, useState } from "react";
+import { useGSAP } from '@gsap/react'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { gsap } from 'gsap'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { ChangeEvent, FormEvent, useRef, useState } from 'react'
+import toast from 'react-hot-toast'
+import { MdOutlineMail } from 'react-icons/md'
+import { MdPassword } from 'react-icons/md'
 
-import XSvg from "@/components/svgs/X";
-import { MdOutlineMail } from "react-icons/md";
-import { MdPassword } from "react-icons/md";
-import Link from "next/link";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { gsap } from "gsap";
-import { useGSAP } from "@gsap/react";
+import XSvg from '@/components/svgs/X'
 
 interface LoginData {
-  usernameOrEmail: string;
-  password: string;
+  usernameOrEmail: string
+  password: string
 }
-
+interface test {
+  message: string
+}
 const LoginPage = () => {
-  const containerRef = useRef(null);
-  const router = useRouter();
+  const containerRef = useRef(null)
+  const router = useRouter()
 
   const [formData, setFormData] = useState({
-    usernameOrEmail: "",
-    password: "",
-  });
+    usernameOrEmail: '',
+    password: '',
+  })
 
   const {
     mutate: loginMutation,
@@ -32,56 +34,57 @@ const LoginPage = () => {
     data,
     error,
     isPending,
-  } = useMutation<void, Error, LoginData>({
+  } = useMutation<test, Error, LoginData>({
     mutationFn: async ({ usernameOrEmail, password }) => {
       try {
         const res = await fetch(`/api/auth/login`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ usernameOrEmail, password }),
-        });
-        const data = await res.json();
+        })
+        const data = await res.json()
 
-        if (data.error) throw new Error(data.error);
-        if (!res.ok) throw new Error(data.error);
-
-        return data;
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error(data.error)
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: () => {
-      toast.success("Check your email for verification code");
-      router.push("/verify");
+      toast.success('Check your email for verification code')
+      setFormData({
+        usernameOrEmail: '',
+        password: '',
+      })
     },
-  });
+  })
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     loginMutation({
       usernameOrEmail: formData.usernameOrEmail,
       password: formData.password,
-    });
-  };
+    })
+  }
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   // useGSAP(() => {
   //   gsap.to(".form", { duration: 2, x: 800, rotate: 720 });
   // });
-
   return (
     <div className="max-w-screen-xl mx-auto flex h-screen" ref={containerRef}>
       <div className="flex-1 hidden lg:flex  items-center  justify-center">
         <XSvg className="lg:w-2/3 dark:fill-white fill-black" />
       </div>
-      <div className="flex-1 flex flex-col justify-center items-center ">
+      <div className="flex-1 flex flex-col justify-center items-start ">
         <form
-          className="form mx-auto md:mx-20 flex gap-4 flex-col"
+          className="form mx-auto lg:mx-0 flex gap-4 flex-col"
           onSubmit={handleSubmit}
           method="POST"
         >
@@ -111,12 +114,12 @@ const LoginPage = () => {
             />
           </label>
           <button className="btn rounded-full btn-primary">
-            {isPending ? "Loading..." : "Login"}
+            {isPending ? 'Loading...' : 'Login'}
           </button>
           {isError && <p className="text-red-500">{error?.message}</p>}
         </form>
-        <div className="flex flex-col gap-2 mt-4 lg:w-2/3">
-          <Link href={"/forget-password"} className="underline">
+        <div className="flex flex-col gap-2 mt-4 lg:mx-0  mx-auto">
+          <Link href={'/forget-password'} className="underline">
             forget your password
           </Link>
           <p className=" text-lg">{"Don't"} have an account?</p>
@@ -128,6 +131,6 @@ const LoginPage = () => {
         </div>
       </div>
     </div>
-  );
-};
-export default LoginPage;
+  )
+}
+export default LoginPage

@@ -1,6 +1,5 @@
 import { type Request, type Response } from "express-serve-static-core";
 import User, { type UserTypes } from "../../models/user-model";
-import { userResponse } from "../../lib/utils/userResponse";
 
 export const getSuggestedUsers = async (req: Request, res: Response) => {
   try {

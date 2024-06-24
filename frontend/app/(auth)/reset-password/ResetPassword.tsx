@@ -5,7 +5,16 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast from "react-hot-toast";
-import { MdPassword } from "react-icons/md";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 interface resetData {
   password: string;
@@ -68,54 +77,47 @@ export const ResetPassword = ({ verify }: { verify: string }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   return (
-    <div>
-      <div className="flex-1 flex flex-col justify-center items-center ">
-        <form
-          className="mx-auto md:mx-20 flex gap-4 flex-col"
-          onSubmit={handleSubmit}
-          method="POST"
-        >
-          <label className=" input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
-            <MdPassword className="fill-black" />
-            <input
-              type="password"
-              className="grow"
-              placeholder="Password"
+    <Card className="mx-auto max-w-sm">
+      <CardHeader>
+        <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+        <CardDescription>
+          Enter your new password and confirm it below.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4" method="POST">
+          <div className="space-y-2">
+            <Label>New Password</Label>
+            <Input
               name="password"
-              onChange={handleInputChange}
-              value={formData.password}
-            />
-          </label>
-
-          <label className=" input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
-            <MdPassword className="fill-black" />
-            <input
               type="password"
-              className="grow"
-              placeholder="confirmPassword"
-              name="confirmPassword"
+              value={formData.password}
               onChange={handleInputChange}
-              value={formData.confirmPassword}
+              required
             />
-          </label>
-          <button className="btn rounded-full btn-primary">
-            {isPending ? "Loading..." : "Reset Your Password"}
-          </button>
-          {isError && <p className="text-red-500">{error?.message}</p>}
+          </div>
+          <div className="space-y-2">
+            <Label>Confirm Password</Label>
+            <Input
+              name="confirmPassword"
+              type="password"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          {isError && (
+            <div className="text-red-500 text-sm">{error.message}</div>
+          )}
+          <Button
+            type="submit"
+            className="w-full disabled:cursor-progress cursor-wait"
+            disabled={isPending}
+          >
+            {isPending ? "Resetting..." : "Reset Password"}
+          </Button>
         </form>
-        <div className="flex flex-col gap-2 mt-4 lg:w-2/3">
-          <Link href={"/login"} className="underline">
-            back to login
-          </Link>
-          <p className=" text-lg">{"Don't"} have an account?</p>
-          <Link href="/signup">
-            <button className="btn rounded-full btn-secondary btn-outline ">
-              Sign up
-            </button>
-          </Link>
-        </div>
-      </div>
-      <div className="flex-1">{data && <p>{data?.message}</p>}</div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

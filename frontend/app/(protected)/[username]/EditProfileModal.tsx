@@ -1,32 +1,48 @@
-"use client";
-import { useState } from "react";
+'use client'
 
-const EditProfileModal = () => {
+import { useEffect, useState } from 'react'
+
+import { useUpdateProfile } from '@/hooks/useProfile'
+import { User } from '@/types'
+
+const EditProfileModal = ({ authUser }: { authUser: User | undefined }) => {
   const [formData, setFormData] = useState({
-    fullName: "",
-    username: "",
-    email: "",
-    bio: "",
-    link: "",
-    newPassword: "",
-    currentPassword: "",
-  });
-
+    fullName: '',
+    username: '',
+    email: '',
+    bio: '',
+    link: '',
+    newPassword: '',
+    currentPassword: '',
+  })
+  const { updateProfile, isPending } = useUpdateProfile()
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const openModal = () => {
     const modal = document.getElementById(
-      "edit_profile_modal"
-    ) as HTMLDialogElement | null;
+      'edit_profile_modal'
+    ) as HTMLDialogElement | null
     if (modal) {
-      modal.showModal();
+      modal.showModal()
     }
-  };
-
+  }
+  useEffect(() => {
+    if (authUser) {
+      setFormData({
+        fullName: authUser?.fullName,
+        username: authUser?.username,
+        email: authUser?.email,
+        bio: authUser?.bio,
+        link: authUser?.link,
+        newPassword: '',
+        currentPassword: '',
+      })
+    }
+  }, [])
   return (
     <>
       <button
@@ -41,8 +57,8 @@ const EditProfileModal = () => {
           <form
             className="flex flex-col gap-4"
             onSubmit={(e) => {
-              e.preventDefault();
-              alert("Profile updated successfully");
+              e.preventDefault()
+              updateProfile(formData)
             }}
           >
             <div className="flex flex-wrap gap-2">
@@ -107,7 +123,7 @@ const EditProfileModal = () => {
               onChange={handleInputChange}
             />
             <button className="btn btn-primary rounded-full btn-sm ">
-              Update
+              {isPending ? 'Updating...' : 'Update'}
             </button>
           </form>
         </div>
@@ -116,7 +132,7 @@ const EditProfileModal = () => {
         </form>
       </dialog>
     </>
-  );
-};
+  )
+}
 
-export default EditProfileModal;
+export default EditProfileModal

@@ -1,38 +1,37 @@
-"use client";
+'use client'
 
-import { ChangeEvent, FormEvent, useState } from "react";
+import { useMutation } from '@tanstack/react-query'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { ChangeEvent, FormEvent, useState } from 'react'
+import toast from 'react-hot-toast'
+import { FaUser } from 'react-icons/fa'
+import { MdOutlineMail } from 'react-icons/md'
+import { MdPassword } from 'react-icons/md'
+import { MdDriveFileRenameOutline } from 'react-icons/md'
 
-import XSvg from "@/components/svgs/X";
-
-import { MdOutlineMail } from "react-icons/md";
-import { FaUser } from "react-icons/fa";
-import { MdPassword } from "react-icons/md";
-import { MdDriveFileRenameOutline } from "react-icons/md";
-import Link from "next/link";
-import { useMutation } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import XSvg from '@/components/svgs/X'
 
 interface SignUpData {
-  username: string;
-  password: string;
-  fullName: string;
-  email: string;
+  username: string
+  password: string
+  fullName: string
+  email: string
 }
 
 interface Data {
-  message: string;
+  message: string
 }
 
 const SignUpPage = () => {
-  const router = useRouter();
+  const router = useRouter()
 
   const [formData, setFormData] = useState({
-    email: "",
-    username: "",
-    fullName: "",
-    password: "",
-  });
+    email: '',
+    username: '',
+    fullName: '',
+    password: '',
+  })
 
   const {
     mutate: signUpMutation,
@@ -43,43 +42,42 @@ const SignUpPage = () => {
   } = useMutation<Data, Error, SignUpData>({
     mutationFn: async ({ username, email, password, fullName }) => {
       try {
-        const res = await fetch("/api/auth/signup", {
-          method: "POST",
+        const res = await fetch('/api/auth/signup', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ username, email, password, fullName }),
-        });
+        })
 
-        const data = await res.json();
+        const data = await res.json()
 
-        if (data.error) throw new Error(data.error);
-        if (!res.ok) throw new Error("Something went wrong");
-
-        return data;
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error('Something went wrong')
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: () => {
-      toast.success(`${data?.message}`);
-      router.push("/create-account");
+      toast.success(`${data?.message}`)
+      router.push('/create-account')
     },
-  });
+  })
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+    setFormData({ ...formData, [e.target.name]: e.target.value })
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     signUpMutation({
       username: formData.username,
       password: formData.password,
       fullName: formData.fullName,
       email: formData.email,
-    });
-  };
+    })
+  }
 
   return (
     <div className="max-w-screen-xl mx-auto flex h-screen px-10">
@@ -116,15 +114,12 @@ const SignUpPage = () => {
                 onChange={handleInputChange}
                 value={formData.username
                   .trim()
-                  .replace(/-/g, "")
-                  .replace(/ /g, "-")
-                  .replace(/[^\w-]+/g, "")}
+                  .replace(/-/g, '')
+                  .replace(/ /g, '-')
+                  .replace(/[^\w-]+/g, '')}
               />
             </label>
-            <label
-              className="input input-bordered rounded f
-            lex items-center gap-2 flex-1 bg-slate-200 dark:bg-gray-200 text-black"
-            >
+            <label className="input input-bordered rounded flex items-center gap-2 flex-1 bg-slate-200 dark:bg-gray-200 text-black">
               <MdDriveFileRenameOutline className="fill-black" />
               <input
                 type="text"
@@ -148,7 +143,7 @@ const SignUpPage = () => {
             />
           </label>
           <button className="btn rounded-full btn-primary">
-            {isPending ? "Loading..." : "Sign up"}
+            {isPending ? 'Loading...' : 'Sign up'}
           </button>
           {isError && <p className="text-red-500">{error?.message}</p>}
         </form>
@@ -156,12 +151,12 @@ const SignUpPage = () => {
           <p className=" text-lg">Already have an account?</p>
           <Link href="/login">
             <button className="btn rounded-full btn-primary btn-outline w-full">
-              Sign in
+              login
             </button>
           </Link>
         </div>
       </div>
     </div>
-  );
-};
-export default SignUpPage;
+  )
+}
+export default SignUpPage

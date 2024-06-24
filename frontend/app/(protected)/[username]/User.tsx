@@ -1,78 +1,91 @@
-"use client";
+'use client'
 
-import { useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
+import toast from 'react-hot-toast'
+import { FaLink } from 'react-icons/fa'
+import { FaArrowLeft } from 'react-icons/fa6'
+import { IoCalendarOutline } from 'react-icons/io5'
+import { MdEdit } from 'react-icons/md'
 
-import Posts from "@/components/common/Posts";
-import ProfileHeaderSkeleton from "@/components/skeletons/ProfileHeaderSkeleton";
-import EditProfileModal from "./EditProfileModal";
+import { formatMemberSinceDate } from '@/lib/utils/date'
+import { POSTS } from '@/lib/utils/db/dummy'
 
-import { POSTS } from "@/lib/utils/db/dummy";
+import CldImage from '@/components/CldImage'
+import Posts from '@/components/common/Posts'
+import ProfileHeaderSkeleton from '@/components/skeletons/ProfileHeaderSkeleton'
 
-import { FaArrowLeft } from "react-icons/fa6";
-import { IoCalendarOutline } from "react-icons/io5";
-import { FaLink } from "react-icons/fa";
-import { MdEdit } from "react-icons/md";
-import { useQuery } from "@tanstack/react-query";
-import CldImage from "@/components/CldImage";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+import EditProfileModal from './EditProfileModal'
+import { useFollow } from '@/hooks/useFollow'
+import { useUpdateProfile } from '@/hooks/useProfile'
+import { User } from '@/types'
 
 // Define the type for the cloudinaryLoader function options
 
 export const UserProfile = ({ username }: { username: string }) => {
-  const router = useRouter();
+  const router = useRouter()
+  const queryClient = useQueryClient()
 
-  const dummyCldProfileImg = "v1716385852/ueki1tqqaf3jxh15svib";
-  const dummyCldBannerImg = "v1716386529/zokftm0v9oyxazvhy5ex";
+  const dummyCldProfileImg = 'v1716385852/ueki1tqqaf3jxh15svib'
+  const dummyCldBannerImg = 'v1716386529/zokftm0v9oyxazvhy5ex'
 
-  const { data: user, isLoading } = useQuery({
-    queryKey: ["userProfile"],
+  const { data: authUser } = useQuery<User>({ queryKey: ['authUser'] })
+
+  const { data: user, isLoading } = useQuery<User>({
+    queryKey: ['userProfile'],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/users/profile/${username}`);
-        const data = await res.json();
+        const res = await fetch(`/api/users/profile/${username}`)
+        const data = await res.json()
 
         if (!res.ok || data.error) {
-          throw new Error(data.error || "Something went wrong");
+          throw new Error(data.error || 'Something went wrong')
         }
 
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
-  });
+  })
+  const { updateProfile, isPending: isUpdatePending } = useUpdateProfile()
 
-  console.log(user);
+  const [coverImg, setCoverImg] = useState<string | null>(null)
+  const [profileImg, setProfileImg] = useState<string | null>(null)
+  const [feedType, setFeedType] = useState('posts')
 
-  const [coverImg, setCoverImg] = useState<string | null>(null);
-  const [profileImg, setProfileImg] = useState<string | null>(null);
-  const [feedType, setFeedType] = useState("posts");
-
-  const coverImgRef = useRef<HTMLInputElement>(null);
-  const profileImgRef = useRef<HTMLInputElement>(null);
-
-  const isMyProfile = true;
+  const coverImgRef = useRef<HTMLInputElement>(null)
+  const profileImgRef = useRef<HTMLInputElement>(null)
 
   const handleImgChange = (
     e: React.ChangeEvent<HTMLInputElement>,
-    state: "coverImg" | "profileImg"
+    state: 'coverImg' | 'profileImg'
   ) => {
-    if (!e.target.files) return;
-    const file = e.target.files[0];
+    if (!e.target.files) return
+    const file = e.target.files[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onload = () => {
-        const result = reader.result as string;
-        if (state === "coverImg") {
-          setCoverImg(result);
-        } else if (state === "profileImg") {
-          setProfileImg(result);
+        const result = reader.result as string
+        if (state === 'coverImg') {
+          setCoverImg(result)
+        } else if (state === 'profileImg') {
+          setProfileImg(result)
         }
-      };
-      reader.readAsDataURL(file);
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
+
+  const { follow, isPending } = useFollow()
+
+  const isMyProfile = authUser?._id === user?._id
+  const isAlreadyFollowed = authUser?.following.includes(authUser?._id!)
+
+  const memberSinceDate = formatMemberSinceDate(user?.createdAt)
 
   return (
     <>
@@ -138,13 +151,13 @@ export const UserProfile = ({ username }: { username: string }) => {
                   type="file"
                   hidden
                   ref={coverImgRef}
-                  onChange={(e) => handleImgChange(e, "coverImg")}
+                  onChange={(e) => handleImgChange(e, 'coverImg')}
                 />
                 <input
                   type="file"
                   hidden
                   ref={profileImgRef}
-                  onChange={(e) => handleImgChange(e, "profileImg")}
+                  onChange={(e) => handleImgChange(e, 'profileImg')}
                 />
                 {/* USER AVATAR */}
                 <div className="avatar absolute -bottom-16 left-4">
@@ -186,21 +199,27 @@ export const UserProfile = ({ username }: { username: string }) => {
                 </div>
               </div>
               <div className="flex justify-end px-4 mt-5">
-                {isMyProfile && <EditProfileModal />}
+                {isMyProfile && <EditProfileModal authUser={authUser} />}
                 {!isMyProfile && (
                   <button
                     className="btn btn-outline rounded-full btn-sm"
-                    onClick={() => alert("Followed successfully")}
+                    onClick={() => follow(user._id)}
                   >
-                    Follow
+                    {isPending && 'following...'}
+                    {!isPending && isAlreadyFollowed && 'Unfollow'}
+                    {!isPending && !isAlreadyFollowed && 'follow'}
                   </button>
                 )}
                 {(coverImg || profileImg) && (
                   <button
                     className="btn btn-primary rounded-full btn-sm px-4 ml-2"
-                    onClick={() => alert("Profile updated successfully")}
+                    onClick={async () => {
+                      await updateProfile({ coverImg, profileImg })
+                      setCoverImg(null)
+                      setProfileImg(null)
+                    }}
                   >
-                    Update
+                    {isUpdatePending ? 'updating...' : 'Update'}
                   </button>
                 )}
               </div>
@@ -219,21 +238,24 @@ export const UserProfile = ({ username }: { username: string }) => {
                     <div className="flex gap-1 items-center ">
                       <>
                         <FaLink className="w-3 h-3 text-slate-500" />
-                        <a
-                          href="https://youtube.com/@asaprogrammer_"
+                        <Link
+                          href={user.link}
                           target="_blank"
                           rel="noreferrer"
                           className="text-sm text-blue-500 hover:underline"
                         >
-                          youtube.com/@asaprogrammer_
-                        </a>
+                          {user.link.replace(
+                            /^(https?:\/\/)?([^:\/\s]+)(:[0-9]+)?(\/.*)?$/,
+                            '$2$4'
+                          )}
+                        </Link>
                       </>
                     </div>
                   )}
                   <div className="flex gap-2 items-center">
                     <IoCalendarOutline className="w-4 h-4 text-slate-500" />
                     <span className="text-sm text-slate-500">
-                      Joined July 2021
+                      {memberSinceDate}
                     </span>
                   </div>
                 </div>
@@ -255,19 +277,19 @@ export const UserProfile = ({ username }: { username: string }) => {
               <div className="flex w-full border-b border-gray-700 mt-4">
                 <div
                   className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 relative cursor-pointer"
-                  onClick={() => setFeedType("posts")}
+                  onClick={() => setFeedType('posts')}
                 >
                   Posts
-                  {feedType === "posts" && (
+                  {feedType === 'posts' && (
                     <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary" />
                   )}
                 </div>
                 <div
                   className="flex justify-center flex-1 p-3 text-slate-500 hover:bg-secondary transition duration-300 relative cursor-pointer"
-                  onClick={() => setFeedType("likes")}
+                  onClick={() => setFeedType('likes')}
                 >
                   Likes
-                  {feedType === "likes" && (
+                  {feedType === 'likes' && (
                     <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary" />
                   )}
                 </div>
@@ -279,5 +301,5 @@ export const UserProfile = ({ username }: { username: string }) => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}

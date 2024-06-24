@@ -5,68 +5,72 @@ export const verifyAccTemplate = (code: string) => `
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Email Verification</title>
-<style>
-  /* Reset CSS */
-  body, html {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    font-size: 16px;
-  }
 
-  /* Wrapper */
-  .wrapper {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #ffffff;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  }
-
-  /* Heading */
-  h2 {
-    color: #333333;
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-
-  /* Paragraphs */
-  p {
-    color: #666666;
-    margin-bottom: 10px;
-  }
-
-  /* Strong */
-  strong {
-    color: #000000;
-  }
-
-  /* Button */
-  .button {
-    display: inline-block;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #ffffff;
-    text-decoration: none;
-    border-radius: 5px;
-    font-size: 16px;
-  }
-
-  /* Button Link */
-  .button:hover {
-    background-color: #0056b3;
-  }
-</style>
 </head>
 <body>
-<div class="wrapper">
-  <h2>Email Verification</h2>
-  <p>Hello,</p>
-  <p>Your verification code is: <strong>${code}</strong></p>
-  <p>Please use this code to verify your email address.</p>
-  <p>If you didn't request this, you can safely ignore this email.</p>
-  <p>Thank you!</p>
+<div
+  style="font-family: Helvetica, Arial, sans-serif; background-color: rgb(245, 245, 245); padding: 40px; --darkreader-inline-bgcolor: #1e2021;"
+  data-darkreader-inline-bgcolor=""
+>
+  <table
+    style="width: 100%; max-width: 600px; margin: 0px auto; background-color: rgb(255, 255, 255); border-radius: 8px; box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 8px; --darkreader-inline-bgcolor: #181a1b; --darkreader-inline-boxshadow: rgba(0, 0, 0, 0.1) 0px 2px 8px;"
+    data-darkreader-inline-bgcolor=""
+    data-darkreader-inline-boxshadow=""
+  >
+    <tr>
+      <td style="padding: 40px;">
+        <table style="width: 100%;">
+          <tr>
+            <td>
+              <img src="/placeholder.svg" alt="Company Logo" style="height: 40px;" />
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; padding-top: 40px;">
+              <h1
+                style="font-size: 32px; font-weight: bold; color: rgb(51, 51, 51); margin-bottom: 16px; --darkreader-inline-color: #c8c3bc;"
+                data-darkreader-inline-color=""
+              >
+                Verify Your Account
+              </h1>
+              <p
+                style="font-size: 16px; color: rgb(102, 102, 102); margin-bottom: 32px; --darkreader-inline-color: #a8a095;"
+                data-darkreader-inline-color=""
+              >
+                Please enter the following 6-digit verification code to complete your account verification. This
+                code will expire in 5 minutes.
+              </p>
+              <div
+                style="background-color: rgb(245, 245, 245); padding: 24px; border-radius: 8px; margin-bottom: 32px; --darkreader-inline-bgcolor: #1e2021;"
+                data-darkreader-inline-bgcolor=""
+              >
+                <h2
+                  style="font-size: 48px; font-weight: bold; color: rgb(51, 51, 51); text-align: center; --darkreader-inline-color: #c8c3bc;"
+                  data-darkreader-inline-color=""
+                >
+                  ${code}
+                </h2>
+              </div>
+              <button
+              onclick={() => {
+    navigator.clipboard.writeText(code)
+  }}
+                style="display: inline-block; background-color: rgb(0, 123, 255); color: rgb(255, 255, 255); font-size: 16px; font-weight: bold; text-decoration: none; padding: 12px 24px; border-radius: 4px; transition: background-color 0.3s ease 0s; border: none; cursor: pointer; --darkreader-inline-bgcolor: #0062cc; --darkreader-inline-color: #e8e6e3; --darkreader-inline-border-top: none; --darkreader-inline-border-right: none; --darkreader-inline-border-bottom: none; --darkreader-inline-border-left: none;"
+                data-darkreader-inline-bgcolor=""
+                data-darkreader-inline-color=""
+                data-darkreader-inline-border-top=""
+                data-darkreader-inline-border-right=""
+                data-darkreader-inline-border-bottom=""
+                data-darkreader-inline-border-left=""
+              >
+                Copy Code
+              </button>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </div>
 </body>
 </html>

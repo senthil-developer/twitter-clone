@@ -45,66 +45,38 @@ async function mail({ userEmail, redirect_url, type }: Props) {
       },
     });
 
-    const verifyMailOptions: nodemailer.SendMailOptions = {
-      from: "twitter.acc.app@gmail.com",
-      to: userEmail,
-      subject: "Verify Your Account",
-      text: "This is a test email sent from Nodemailer with Gmail.",
-      html: verifyAccTemplate(code),
-    };
-
-    const createAccMailOptions: nodemailer.SendMailOptions = {
-      from: "twitter.acc.app@gmail.com",
-      to: userEmail,
-      subject: "create account",
-      text: "This is a test email sent from Nodemailer with Gmail.",
-      html: createAccTemplate(redirect_url!),
-    };
-    const resetPasswordMailOptions: nodemailer.SendMailOptions = {
-      from: "twitter.acc.app@gmail.com",
-      to: userEmail,
-      subject: "Reset Your Password",
-      text: "This is a test email sent from Nodemailer with Gmail.",
-      html: ResetPasswordTemplate(redirect_url!),
-    };
+    let mailOptions: nodemailer.SendMailOptions = {};
 
     if (type === "createAcc") {
-      const res = await transporter.sendMail(
-        createAccMailOptions,
-        (error, info) => {
-          if (error) {
-            console.error("Error occurred:", error);
-          } else {
-            console.log("Email sent:", info);
-          }
-        }
-      );
-      return res;
-    } else if (type === "resetPassword") {
-      const res = await transporter.sendMail(
-        resetPasswordMailOptions,
-        (error, info) => {
-          if (error) {
-            console.error("Error occurred:", error);
-          } else {
-            console.log("Email sent:", info);
-          }
-        }
-      );
-      return res;
-    } else {
-      const res = await transporter.sendMail(
-        verifyMailOptions,
-        (error, info) => {
-          if (error) {
-            console.error("Error occurred:", error);
-          } else {
-            console.log("Email sent:", info);
-          }
-        }
-      );
-      return res;
+      mailOptions = {
+        from: "twitter.acc.app@gmail.com",
+        to: userEmail,
+        subject: "create account",
+        text: "This is a test email sent from Nodemailer with Gmail.",
+        html: createAccTemplate(redirect_url!),
+      };
     }
+    if (type === "resetPassword") {
+      mailOptions = {
+        from: "twitter.acc.app@gmail.com",
+        to: userEmail,
+        subject: "Reset Your Password",
+        text: "This is a test email sent from Nodemailer with Gmail.",
+        html: ResetPasswordTemplate(redirect_url!),
+      };
+    }
+    if (type === "verify") {
+      mailOptions = {
+        from: "senthildeveloper4@gmail.com",
+        to: userEmail,
+        subject: "Verify Your Account",
+        text: "This is a test email sent from Nodemailer with Gmail.",
+        html: verifyAccTemplate(code),
+      };
+    }
+
+    const res = await transporter.sendMail(mailOptions);
+    console.log("Email sent successfully", res);
   } catch (err) {
     logger.error(`Error occurred while sending email: ${err}`);
     throw err;

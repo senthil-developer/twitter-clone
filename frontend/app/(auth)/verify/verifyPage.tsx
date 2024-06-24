@@ -7,6 +7,26 @@ import toast from "react-hot-toast";
 import { MdOutlineMail } from "react-icons/md";
 import { useRouter } from "next/navigation";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@/components/ui/input-otp";
+
 interface forgetData {
   verificationCode: string;
 }
@@ -14,9 +34,6 @@ interface forgetData {
 export const VerifyUser = () => {
   const router = useRouter();
 
-  const [formData, setFormData] = useState({
-    verificationCode: "",
-  });
   const queryClient = useQueryClient();
 
   const {
@@ -53,49 +70,57 @@ export const VerifyUser = () => {
     },
   });
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    forgetMutation({
-      verificationCode: formData.verificationCode,
-    });
-  };
+  const FormSchema = z.object({
+    pin: z.string().min(6, {
+      message: "Your one-time password must be 6 characters.",
+    }),
+  });
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      pin: "",
+    },
+  });
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast.success(data.pin);
+    forgetMutation({
+      verificationCode: data.pin as string,
+    });
+  }
 
   return (
-    <div className="flex-1 flex flex-col justify-center items-center ">
-      <form
-        className="mx-auto md:mx-20 flex gap-4 flex-col"
-        onSubmit={handleSubmit}
-        method="POST"
-      >
-        <label className="input input-bordered rounded flex items-center gap-2 bg-slate-200 dark:bg-gray-200 text-black">
-          <MdOutlineMail className="fill-black" />
-          <input
-            type="text"
-            className="grow"
-            placeholder="enter 6 digit code"
-            name="verificationCode"
-            onChange={handleInputChange}
-            value={formData.verificationCode}
-          />
-        </label>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+        <FormField
+          control={form.control}
+          name="pin"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>One-Time Password</FormLabel>
+              <FormControl>
+                <InputOTP maxLength={6} {...field}>
+                  <InputOTPGroup>
+                    <InputOTPSlot index={0} />
+                    <InputOTPSlot index={1} />
+                    <InputOTPSlot index={2} />
+                    <InputOTPSlot index={3} />
+                    <InputOTPSlot index={4} />
+                    <InputOTPSlot index={5} />
+                  </InputOTPGroup>
+                </InputOTP>
+              </FormControl>
+              <FormDescription>
+                Please enter the one-time password sent to your phone.
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-        <button className="btn rounded-full btn-primary">
-          {isPending ? "Loading..." : "Login"}
-        </button>
-        {isError && <p className="text-red-500">{error?.message}</p>}
+        <Button type="submit">Submit</Button>
       </form>
-      <div className="flex flex-col gap-2 mt-4 lg:w-2/3">
-        <p className=" text-lg">{"Don't"} have an account?</p>
-        <Link href="/signup">
-          <button className="btn rounded-full btn-secondary btn-outline ">
-            Sign up
-          </button>
-        </Link>
-      </div>
-    </div>
+    </Form>
   );
 };

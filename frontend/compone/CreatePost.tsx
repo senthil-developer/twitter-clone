@@ -1,52 +1,112 @@
-"use client";
+'use client'
 
-import { CiImageOn } from "react-icons/ci";
-import { BsEmojiSmileFill } from "react-icons/bs";
-import { useRef, useState } from "react";
-import { IoCloseSharp } from "react-icons/io5";
-import Image from "next/image";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import Image from 'next/image'
+import { useRouter } from 'next/navigation'
+import { useRef, useState } from 'react'
+import toast from 'react-hot-toast'
+import { BsEmojiSmileFill } from 'react-icons/bs'
+import { CiImageOn } from 'react-icons/ci'
+import { IoCloseSharp } from 'react-icons/io5'
+
+import { AuthUserType } from '@/components/common/Post'
+
+import { User } from '@/types'
+
+interface PostData {
+  content: string
+  img?: string
+}
+
+interface Data {
+  _id: string
+  user: User
+  content?: string
+  img?: string
+  likes?: User[]
+  comments?: {
+    comment: string
+    user: User
+  }[]
+}
 
 const CreatePost = () => {
-  const [text, setText] = useState("");
-  const [img, setImg] = useState<string | null>(null);
+  const [text, setText] = useState('')
+  const [img, setImg] = useState<string | null>(null)
 
-  const imgRef = useRef<HTMLInputElement | null>(null);
+  const imgRef = useRef<HTMLInputElement | null>(null)
 
-  const isPending = false;
-  const isError = false;
+  const router = useRouter()
 
-  const data = {
-    profileImg: "/avatars/boy1.png",
-  };
+  const { data: authUser } = useQuery<AuthUserType>({
+    queryKey: ['authUser'],
+  })
+
+  const queryClient = useQueryClient()
+  const {
+    mutate: PostMutation,
+    isError,
+    data,
+    error,
+    isPending,
+  } = useMutation<Data, Error, PostData>({
+    mutationFn: async ({ content, img }) => {
+      try {
+        const res = await fetch(`/api/post/create`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ content, img }),
+        })
+        const data = await res.json()
+
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error(data.error)
+
+        return data
+      } catch (error) {
+        throw error
+      }
+    },
+    onSuccess: () => {
+      setImg(null)
+      setText('')
+      toast.success('Post created successfully')
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+      // router.push(`posts/${data?._id}`)
+    },
+  })
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    alert("Post created successfully");
-  };
+    e.preventDefault()
+    console.log(text, img)
+    alert('Post created successfully')
+  }
 
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     if (e.target.files) {
-      const file = e.target.files[0];
+      const file = e.target.files[0]
       if (file) {
-        const reader = new FileReader();
+        const reader = new FileReader()
         reader.onload = () => {
-          const result = reader.result as string;
+          const result = reader.result as string
           if (result !== null) {
-            setImg(result);
+            setImg(result)
           }
-        };
-        reader.readAsDataURL(file);
+        }
+        reader.readAsDataURL(file)
       }
     }
-  };
+  }
 
   return (
     <div className="flex p-4 items-start gap-4 border-b border-gray-700">
       <div className="avatar">
         <div className="w-8 rounded-full">
           <Image
-            src={data.profileImg || "/avatar-placeholder.png"}
+            src={authUser?.profileImg || '/avatar-placeholder.png'}
             fill
             alt="profile image"
             sizes="(max-width: 768px) 100vw,
@@ -67,8 +127,8 @@ const CreatePost = () => {
             <IoCloseSharp
               className="absolute top-0 right-0  bg-gray-800 rounded-full w-5 h-5 cursor-pointer"
               onClick={() => {
-                setImg(null);
-                imgRef.current && (imgRef.current.value = "");
+                setImg(null)
+                imgRef.current && (imgRef.current.value = '')
               }}
             />
             <Image
@@ -90,12 +150,12 @@ const CreatePost = () => {
           </div>
           <input type="file" hidden ref={imgRef} onChange={handleImgChange} />
           <button className="btn btn-primary rounded-full btn-sm px-4">
-            {isPending ? "Posting..." : "Post"}
+            {isPending ? 'Posting...' : 'Post'}
           </button>
         </div>
-        {isError && <div className="text-red-500">Something went wrong</div>}
+        {isError && <div className="text-red-500">{error.message}</div>}
       </form>
     </div>
-  );
-};
-export default CreatePost;
+  )
+}
+export default CreatePost

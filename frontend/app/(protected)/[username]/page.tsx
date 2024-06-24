@@ -1,11 +1,20 @@
-import { Metadata } from "next";
 import { UserProfile } from "./User";
-import { redirect } from "next/navigation";
+import { User } from "@/types";
 
-export const metadata: Metadata = {
-  title: "Profile",
-  description: "ProfilePage",
-};
+export async function generateMetadata({ params }: Props) {
+  const res = await fetch(
+    `${process.env.SERVER_URL}/api/users/profile/${params.username}`
+  );
+  const user = (await res.json()) as User;
+  console.log(user);
+  return {
+    title: `${user.username}`,
+    description: user.bio,
+    openGraph: {
+      images: [user.profileImg],
+    },
+  };
+}
 
 interface Props {
   params: {
