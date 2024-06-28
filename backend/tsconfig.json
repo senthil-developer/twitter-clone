@@ -9,9 +9,6 @@
     "esModuleInterop": true, // This will allow you to use default imports with CommonJS modules.
     "skipLibCheck": true // this option will skip type checking all .d.ts files.
   },
-  "ts-node": {
-    "esm": true
-  },
   "include": ["src/**/*", "types/request.d.ts"], // Specifies which files to include when compiling your project.
   "exclude": ["node_modules"] // Specifies which files to exclude when compiling your project.
 }
