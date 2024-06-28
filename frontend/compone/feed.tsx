@@ -1,57 +1,57 @@
-"use client";
+'use client'
 
-import { useState } from "react";
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 
-import Posts from "@/components/common/Posts";
-import CreatePost from "./CreatePost";
-import { useQuery } from "@tanstack/react-query";
+import Posts from '@/components/common/Posts'
+
+import CreatePost from './CreatePost'
 
 const HomePage = () => {
   const [feedType, setFeedType] = useState<
-    "forYou" | "following" | "posts" | "likes"
-  >("following");
+    'forYou' | 'following' | 'posts' | 'likes'
+  >('forYou')
   const { data: authUser, isLoading } = useQuery({
     // we use queryKey to give a unique name to our query and refer to it later
-    queryKey: ["authUser"],
+    queryKey: ['authUser'],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/auth/me`);
-        const data = await res.json();
-        if (data.error) return null;
+        const res = await fetch(`/api/auth/me`)
+        const data = await res.json()
+        if (data.error) return null
         if (!res.ok) {
-          throw new Error(data.error || "Something went wrong");
+          throw new Error(data.error || 'Something went wrong')
         }
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     retry: false,
-  });
-  console.log(authUser);
+  })
   return (
     <>
       <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
         {/* Header */}
-        <div className="flex w-full border-b border-gray-700">
+        <div className="flex w-full border-b border-gray-700 sticky top-0 bg-white dark:bg-black">
           <div
             className={
-              "flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
+              'flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative'
             }
-            onClick={() => setFeedType("forYou")}
+            onClick={() => setFeedType('forYou')}
           >
             For you
-            {feedType === "forYou" && (
-              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+            {feedType === 'forYou' && (
+              <div className="absolute bottom-0 w-10  h-1 rounded-full dark:bg-white bg-black"></div>
             )}
           </div>
           <div
             className="flex justify-center flex-1 p-3 hover:bg-secondary transition duration-300 cursor-pointer relative"
-            onClick={() => setFeedType("following")}
+            onClick={() => setFeedType('following')}
           >
             Following
-            {feedType === "following" && (
-              <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary"></div>
+            {feedType === 'following' && (
+              <div className="absolute bottom-0 w-10  h-1 rounded-full dark:bg-white bg-black"></div>
             )}
           </div>
         </div>
@@ -63,6 +63,6 @@ const HomePage = () => {
         <Posts feedType={feedType} />
       </div>
     </>
-  );
-};
-export default HomePage;
+  )
+}
+export default HomePage

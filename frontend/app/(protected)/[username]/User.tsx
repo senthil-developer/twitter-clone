@@ -29,9 +29,8 @@ export const UserProfile = ({ username }: { username: string }) => {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const dummyCldProfileImg = 'v1716385852/ueki1tqqaf3jxh15svib'
-  const dummyCldBannerImg = 'v1716386529/zokftm0v9oyxazvhy5ex'
-
+  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
+  const dummyCldBannerImg = process.env.NEXT_PUBLIC_DUMMY_CLD_BANNER_IMG!
   const { data: authUser } = useQuery<User>({ queryKey: ['authUser'] })
 
   const { data: user, isLoading } = useQuery<User>({
@@ -55,7 +54,9 @@ export const UserProfile = ({ username }: { username: string }) => {
 
   const [coverImg, setCoverImg] = useState<string | null>(null)
   const [profileImg, setProfileImg] = useState<string | null>(null)
-  const [feedType, setFeedType] = useState('posts')
+  const [feedType, setFeedType] = useState<
+    'forYou' | 'following' | 'posts' | 'likes'
+  >('posts')
 
   const coverImgRef = useRef<HTMLInputElement>(null)
   const profileImgRef = useRef<HTMLInputElement>(null)
@@ -126,9 +127,9 @@ export const UserProfile = ({ username }: { username: string }) => {
                   />
                 ) : (
                   <CldImage
-                    src={user?.coverImg || dummyCldBannerImg}
+                    src={dummyCldBannerImg}
                     className="h-52 w-full object-cover"
-                    alt="cover image"
+                    alt="banner image"
                     fill
                     sizes="(max-width: 768px) 100vw,
                     (max-width: 1200px) 50vw,
@@ -281,7 +282,7 @@ export const UserProfile = ({ username }: { username: string }) => {
                 >
                   Posts
                   {feedType === 'posts' && (
-                    <div className="absolute bottom-0 w-10 h-1 rounded-full bg-primary" />
+                    <div className="absolute bottom-0 w-10 h-1 rounded-full dark:bg-white bg-black" />
                   )}
                 </div>
                 <div
@@ -290,14 +291,14 @@ export const UserProfile = ({ username }: { username: string }) => {
                 >
                   Likes
                   {feedType === 'likes' && (
-                    <div className="absolute bottom-0 w-10  h-1 rounded-full bg-primary" />
+                    <div className="absolute bottom-0 w-10  h-1 rounded-full dark:bg-white bg-black" />
                   )}
                 </div>
               </div>
             </>
           )}
 
-          {/* <Posts /> */}
+          <Posts feedType={feedType} username={user?.username} />
         </div>
       </div>
     </>

@@ -17,7 +17,6 @@ export const authProtected = async (
     if (!token) {
       return res.status(401).json({ error: "Unauthorized: No Token Provided" });
     }
-
     const decode = (await jwt.verify(
       token,
       process.env.JWT_SECRET!

@@ -32,8 +32,8 @@ export const login = async (
 
     sendMail.verify({ userEmail: user.email });
 
-    res.status(200).json({
-      message: "Login successful",
+    return res.status(200).json({
+      message: `verification mail sent to ${user.email}`,
     });
   } catch (error) {
     console.error("Error during login:", error);

@@ -8,7 +8,7 @@ import { ObjectId } from "mongoose";
 export const Verify = async (req: Request, res: Response) => {
   try {
     const { verificationCode } = req.body;
-    let email = "";
+    let email = "senthildeveloper4@gmail.com";
     if (!verificationCode)
       return res.status(400).json({ error: "Verification code is required" });
 

@@ -12,7 +12,7 @@ interface createAcc extends Props {
   fullName?: string;
 }
 
-export const generateTokenAndSendmail = ({
+export const generateTokenAndSendmail = async ({
   email,
   fullName,
   password,
@@ -27,11 +27,11 @@ export const generateTokenAndSendmail = ({
         expiresIn: "600s",
       }
     );
-    sendMail.createAcc({ userEmail: email, redirect_url: token });
+    await sendMail.createAcc({ userEmail: email, redirect_url: token });
   } else {
     const token = jwt.sign({ email }, process.env.RESET_PASSWORD_JWT_SECRET!, {
       expiresIn: "600s",
     });
-    sendMail.resetPassword({ userEmail: email, redirect_url: token });
+    await sendMail.resetPassword({ userEmail: email, redirect_url: token });
   }
 };

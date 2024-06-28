@@ -15,10 +15,11 @@ import { FaRegBookmark } from 'react-icons/fa6'
 import { formatPostDate } from '@/lib/utils/date'
 
 import LoadingSpinner from './LoadingSpinner'
+import { User } from '@/types'
 
 interface PostType {
   _id: string
-  text: string
+  content: string
   img?: string
   user: {
     _id: string
@@ -28,16 +29,7 @@ interface PostType {
   }
   createdAt: string // You might want to change this to Date if you're using Date objects
   likes: string[]
-  comments: {
-    _id: string
-    text: string
-    user: {
-      _id: string
-      fullName: string
-      username: string
-      profileImg?: string
-    }
-  }[]
+  comments: CommentType[]
 }
 
 interface Props {
@@ -51,13 +43,8 @@ export interface AuthUserType {
 }
 interface CommentType {
   _id: string
-  text: string
-  user: {
-    _id: string
-    fullName: string
-    username: string
-    profileImg?: string
-  }
+  comment: string
+  user: User
 }
 
 const Post: React.FC<Props> = ({ post }) => {
@@ -131,7 +118,7 @@ const Post: React.FC<Props> = ({ post }) => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ text: comment }),
+          body: JSON.stringify({ comment }),
         })
         const data = await res.json()
 
@@ -168,6 +155,8 @@ const Post: React.FC<Props> = ({ post }) => {
     likePost()
   }
 
+  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
+
   return (
     <>
       <div className="flex gap-2 items-start p-4 border-b border-gray-700">
@@ -176,10 +165,18 @@ const Post: React.FC<Props> = ({ post }) => {
             href={`/${postOwner.username}`}
             className="w-8 rounded-full overflow-hidden"
           >
-            <CldImage
-              src={postOwner.profileImg || '/avatar-placeholder.png'}
-              alt={postOwner.fullName + 'user image'}
-            />
+            <div className="size-8 rounded-full relative bg-sky-300 ">
+              <CldImage
+                src={postOwner.profileImg || dummyCldProfileImg}
+                className="h-52 w-full object-cover"
+                alt="profile image"
+                fill
+                sizes="(max-width: 768px) 100vw,
+                    (max-width: 1200px) 50vw,
+                    33vw"
+                priority
+              />
+            </div>
           </Link>
         </div>
         <div className="flex flex-col flex-1">
@@ -205,12 +202,14 @@ const Post: React.FC<Props> = ({ post }) => {
             )}
           </div>
           <div className="flex flex-col gap-3 overflow-hidden">
-            <span>{post.text}</span>
+            <span>{post.content}</span>
             {post.img && (
               <CldImage
                 src={post.img}
                 className="h-80 object-cover rounded-lg border border-gray-700"
                 alt=""
+                width={500}
+                height={500}
               />
             )}
           </div>
@@ -251,9 +250,10 @@ const Post: React.FC<Props> = ({ post }) => {
                           <div className="w-8 rounded-full">
                             <CldImage
                               src={
-                                comment.user.profileImg ||
-                                '/avatar-placeholder.png'
+                                comment.user.profileImg || dummyCldProfileImg
                               }
+                              width={50}
+                              height={50}
                               alt={comment.user.username + 'image'}
                             />
                           </div>
@@ -267,7 +267,7 @@ const Post: React.FC<Props> = ({ post }) => {
                               @{comment.user.username}
                             </span>
                           </div>
-                          <div className="text-sm">{comment.text}</div>
+                          <div className="text-sm">{comment.comment}</div>
                         </div>
                       </div>
                     ))}

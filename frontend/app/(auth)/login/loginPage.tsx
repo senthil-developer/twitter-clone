@@ -59,6 +59,7 @@ const LoginPage = () => {
         usernameOrEmail: '',
         password: '',
       })
+      router.push('/verify')
     },
   })
 

@@ -48,8 +48,8 @@ app.use("*", (_, res: Response) => {
   res.status(404).sendFile(path.join(__dirname, "..", "public", "404.html"));
 });
 
-app.listen(Port, () => {
-  connectDb();
+app.listen(Port, async () => {
+  await connectDb();
   console.log(`Server is running on port ${Port}`);
 });
 

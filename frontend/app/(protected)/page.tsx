@@ -12,7 +12,6 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <div className=" w-full h-full">
-      <h1>Twitter</h1>
       <HomePage />
     </div>
   );

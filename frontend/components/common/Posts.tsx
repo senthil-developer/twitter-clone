@@ -12,19 +12,19 @@ interface Props {
   userId?: string
 }
 
-const Posts = ({ feedType, username, userId }: Props) => {
+const Posts = ({ feedType, username }: Props) => {
   const getPostEndpoint = () => {
     switch (feedType) {
       case 'forYou':
-        return '/api/posts/all'
+        return '/api/posts'
       case 'following':
         return '/api/posts/following'
       case 'posts':
-        return `/api/posts/user/${username}`
+        return `/api/posts/${username}/posts`
       case 'likes':
-        return `/api/posts/likes/${userId}`
+        return `/api/posts/${username}/likes`
       default:
-        return '/api/posts/all'
+        return '/api/posts'
     }
   }
 

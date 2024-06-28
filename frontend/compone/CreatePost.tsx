@@ -9,13 +9,14 @@ import { BsEmojiSmileFill } from 'react-icons/bs'
 import { CiImageOn } from 'react-icons/ci'
 import { IoCloseSharp } from 'react-icons/io5'
 
+import CldImage from '@/components/CldImage'
 import { AuthUserType } from '@/components/common/Post'
 
 import { User } from '@/types'
 
 interface PostData {
   content: string
-  img?: string
+  img?: string | null
 }
 
 interface Data {
@@ -52,7 +53,7 @@ const CreatePost = () => {
   } = useMutation<Data, Error, PostData>({
     mutationFn: async ({ content, img }) => {
       try {
-        const res = await fetch(`/api/post/create`, {
+        const res = await fetch(`/api/posts/create`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -80,8 +81,7 @@ const CreatePost = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    console.log(text, img)
-    alert('Post created successfully')
+    PostMutation({ img, content: text })
   }
 
   const handleImgChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,18 +100,20 @@ const CreatePost = () => {
       }
     }
   }
-
+  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
   return (
     <div className="flex p-4 items-start gap-4 border-b border-gray-700">
       <div className="avatar">
-        <div className="w-8 rounded-full">
-          <Image
-            src={authUser?.profileImg || '/avatar-placeholder.png'}
-            fill
+        <div className="size-8 rounded-full relative bg-sky-300 ">
+          <CldImage
+            src={authUser?.profileImg || dummyCldProfileImg}
+            className="h-52 w-full object-cover"
             alt="profile image"
+            fill
             sizes="(max-width: 768px) 100vw,
                     (max-width: 1200px) 50vw,
                     33vw"
+            priority
           />
         </div>
       </div>

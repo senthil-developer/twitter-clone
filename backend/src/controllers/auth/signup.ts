@@ -38,7 +38,7 @@ export const signup = async (
     }
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    generateTokenAndSendmail({
+    await generateTokenAndSendmail({
       email,
       type: "createAcc",
       username,
@@ -48,7 +48,7 @@ export const signup = async (
     res.status(200).json({
       message: `Verification mail sended to ${email}`,
     });
-  } catch (error: any) {
+  } catch (error) {
     next(error);
   }
 };

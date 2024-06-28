@@ -67,7 +67,7 @@ async function mail({ userEmail, redirect_url, type }: Props) {
     }
     if (type === "verify") {
       mailOptions = {
-        from: "senthildeveloper4@gmail.com",
+        from: "twitter.acc.app@gmail.com",
         to: userEmail,
         subject: "Verify Your Account",
         text: "This is a test email sent from Nodemailer with Gmail.",

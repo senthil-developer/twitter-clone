@@ -2,7 +2,7 @@
   "name": "twitter-clone",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "nodemon --watch src --exec ts-node src/index.ts",
+    "dev": "nodemon --watch src --exec tsx src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js"
   },
@@ -34,7 +34,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.3.2",
     "morgan": "^1.10.0",
-    "nodemailer": "^6.9.13",
+    "nodemailer": "^6.9.14",
     "winston": "^3.13.0"
   }
 }

@@ -8,6 +8,7 @@ import TokenBlacklist from "../../models/tokenBlacklist-model";
 import User from "../../models/user-model";
 import { generateTokenAndSetCookie } from "../../lib/utils/generateToken";
 import { ObjectId } from "mongoose";
+import logger from "../../lib/utils/logger";
 
 interface userDetails {
   email: string;
@@ -53,10 +54,11 @@ export const createAcc = async (
 
     await addBlacklist.save();
 
-    generateTokenAndSetCookie({ userId: user._id as ObjectId, res });
+    await generateTokenAndSetCookie({ userId: user._id as ObjectId, res });
 
     return res.status(200).json(user);
   } catch (error: any) {
+    logger.error("error", error);
     next(error);
   }
 };
