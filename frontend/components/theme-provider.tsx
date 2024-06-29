@@ -19,7 +19,7 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
     <NextThemesProvider {...props}>
       <QueryClientProvider client={queryClient}>
-        <div className="fixed top-2 right-2 z-10 ">
+        <div className="fixed top-2 right-2 z-10 hidden md:block">
           <DarkModeToggle />
         </div>
         {children}

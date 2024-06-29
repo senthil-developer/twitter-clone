@@ -32,8 +32,9 @@ const authRateLimit = rateLimit({
   },
 });
 
-router.use(authRateLimit);
 router.get("/me", authProtected, getCurrentUser);
+
+router.use(authRateLimit);
 
 router.post("/signup", signup);
 

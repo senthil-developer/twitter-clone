@@ -12,7 +12,7 @@ export default function ProtectedLayout({
         <Sidebar />
       </aside>
       <section className="max-w-7xl mx-auto h-full flex-1 ">{children}</section>
-      <aside className="fixed">
+      <aside>
         <RightPanel />
       </aside>
     </div>

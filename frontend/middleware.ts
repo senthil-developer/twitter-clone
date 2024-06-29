@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getServerSideUser } from './lib/getServerSideUser'
+import { User } from './types'
 
 export async function middleware(req: NextRequest) {
   const siteUrl = process.env.SITE_URL
 
   const { nextUrl, cookies } = req
-  const { user } = await getServerSideUser(cookies)
+  const user = (await getServerSideUser(cookies)) as User
+  console.log('middleware', user.username)
   if (
     user &&
     [

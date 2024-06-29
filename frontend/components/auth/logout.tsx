@@ -1,14 +1,13 @@
-"use client";
+'use client'
 
-import { FormEvent, useEffect, useState } from "react";
-import { MouseEvent } from "react";
-
-import { useRouter } from "next/navigation";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { useRouter } from 'next/navigation'
+import { FormEvent, useEffect, useState } from 'react'
+import { MouseEvent } from 'react'
+import toast from 'react-hot-toast'
 
 export default function LogOutUser() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const {
     mutate: logoutMutate,
@@ -19,28 +18,27 @@ export default function LogOutUser() {
     mutationFn: async () => {
       try {
         const res = await fetch(`/api/auth/logout`, {
-          method: "POST",
-        });
+          method: 'POST',
+        })
 
-        const data = await res.json();
-        console.log(data);
-        if (data.error) throw new Error(data.error);
-        if (!res.ok) throw new Error(data.error);
+        const data = await res.json()
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error(data.error)
 
-        return data;
+        return data
       } catch (error) {
-        throw error;
+        throw error
       }
     },
     onSuccess: () => {
-      toast.success("Logout Successful");
-      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      toast.success('Logout Successful')
+      queryClient.invalidateQueries({ queryKey: ['authUser'] })
     },
-  });
+  })
   const handleSubmit = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    logoutMutate();
-  };
+    e.preventDefault()
+    logoutMutate()
+  }
 
   return (
     <div className="">
@@ -53,5 +51,5 @@ export default function LogOutUser() {
       </button>
       {isError && <p className="text-red-500">{error?.message}</p>}
     </div>
-  );
+  )
 }

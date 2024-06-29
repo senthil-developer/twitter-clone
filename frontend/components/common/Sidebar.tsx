@@ -1,49 +1,66 @@
-"use client";
+'use client'
 
-import XSvg from "../svgs/X";
+import CldImage from '../CldImage'
+import XSvg from '../svgs/X'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import Image from 'next/image'
+import Link from 'next/link'
+import { BiLogOut } from 'react-icons/bi'
+import { FaUser } from 'react-icons/fa'
+import { IoNotifications, IoSearch, IoSettings } from 'react-icons/io5'
+import { MdHomeFilled } from 'react-icons/md'
 
-import { MdHomeFilled } from "react-icons/md";
-import { IoNotifications, IoSearch, IoSettings } from "react-icons/io5";
-import { FaUser } from "react-icons/fa";
-import { BiLogOut } from "react-icons/bi";
-import Link from "next/link";
-import Image from "next/image";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { User } from "@/types";
-import CldImage from "../CldImage";
+import { cn } from '@/lib/utils'
+
+import { User } from '@/types'
 
 const Sidebar = () => {
-  const dummyCldProfileImg = "v1716385852/ueki1tqqaf3jxh15svib";
+  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
 
-  const { data } = useQuery<User>({ queryKey: ["authUser"] });
-
+  const { data } = useQuery<User>({
+    queryKey: ['authUser'],
+    queryFn: async () => {
+      try {
+        const res = await fetch(`/api/auth/me`)
+        const data = await res.json()
+        if (data.error) return null
+        if (!res.ok) {
+          throw new Error(data.error || 'Something went wrong')
+        }
+        return data
+      } catch (error) {
+        throw error
+      }
+    },
+    retry: false,
+  })
   const navItems = [
     {
-      name: "Home",
+      name: 'Home',
       icon: <MdHomeFilled className="size-6" />,
-      link: "/",
+      link: '/',
     },
     {
-      name: "Search",
+      name: 'Search',
       icon: <IoSearch className="size-6" />,
-      link: "/search",
+      link: '/search',
     },
     {
-      name: "Profile",
+      name: 'Profile',
       icon: <FaUser className="size-6" />,
       link: `/${data?.username}`,
     },
     {
-      name: "Notifications",
+      name: 'Notifications',
       icon: <IoNotifications className="size-6" />,
-      link: "/notifications",
+      link: '/notifications',
     },
     {
-      name: "Setting",
+      name: 'Setting',
       icon: <IoSettings className="size-6" />,
-      link: "/setting",
+      link: '/setting',
     },
-  ];
+  ]
 
   return (
     <>
@@ -73,7 +90,13 @@ const Sidebar = () => {
           </Link>
           <ul className="flex flex-col gap-3 mt-4">
             {navItems.map((item, index) => (
-              <li key={index} className="flex justify-center md:justify-start">
+              <li
+                key={index}
+                className={cn(
+                  'flex justify-center md:justify-start',
+                  index === navItems.length - 1 && 'mt-auto'
+                )}
+              >
                 <nav>
                   <Link
                     href={item.link}
@@ -121,6 +144,6 @@ const Sidebar = () => {
         </div>
       </div>
     </>
-  );
-};
-export default Sidebar;
+  )
+}
+export default Sidebar

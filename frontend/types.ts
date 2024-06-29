@@ -17,6 +17,7 @@ export interface User {
 
 export interface Notification {
   _id: string
-  from: User
+  fromUser: User
+  toUser: User
   type: string
 }

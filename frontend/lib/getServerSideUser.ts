@@ -1,6 +1,11 @@
-import { RequestCookies } from 'next/dist/compiled/@edge-runtime/cookies'
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
+import { NextRequest } from 'next/server'
 
-export const getServerSideUser = async (cookies: RequestCookies) => {
+import { User } from '@/types'
+
+export const getServerSideUser = async (
+  cookies: NextRequest['cookies'] | ReadonlyRequestCookies
+) => {
   const token = cookies.get('jwt')?.value
 
   if (!token) return { error: 'No token' }
@@ -10,8 +15,6 @@ export const getServerSideUser = async (cookies: RequestCookies) => {
       Authorization: `Jwt ${token}`,
     },
   })
-
-  const { user } = (await meRes.json()) as any
-
-  return { user }
+  const user = (await meRes.json()) as User
+  return user
 }

@@ -16,7 +16,7 @@ router.use(authProtected);
 router.post("/create", createPost);
 router.post("/comment/:id", commentOnPost);
 router.post("/like/:id", likeUnlikePost);
-router.delete("/delete/:id", deletePost);
+router.delete("/:id", deletePost);
 
 router.get("/", getAllPosts);
 router.get("/following", getFollowingPost);

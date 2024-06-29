@@ -35,12 +35,7 @@ interface PostType {
 interface Props {
   post: PostType
 }
-export interface AuthUserType {
-  _id: string
-  fullName: string
-  username: string
-  profileImg?: string
-}
+
 interface CommentType {
   _id: string
   comment: string
@@ -49,7 +44,7 @@ interface CommentType {
 
 const Post: React.FC<Props> = ({ post }) => {
   const [comment, setComment] = useState('')
-  const { data: authUser } = useQuery<AuthUserType>({ queryKey: ['authUser'] })
+  const { data: authUser } = useQuery<User>({ queryKey: ['authUser'] })
   const queryClient = useQueryClient()
   const postOwner = post.user
   const isLiked = post.likes.includes(authUser?._id!)

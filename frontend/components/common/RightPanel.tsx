@@ -38,8 +38,8 @@ const RightPanel = () => {
   if (data?.length === 0) return <div className="md:w-64 w-0"></div>
 
   return (
-    <div className="hidden lg:block my-4 mx-2">
-      <div className="bg-[#16181C] p-4 rounded-md sticky top-2">
+    <div className="hidden lg:block my-4 mx-2 ">
+      <div className="bg-[#16181C] p-4 rounded-md sticky top-2 right-0">
         <p className="font-bold">Who to follow</p>
         <div className="flex flex-col gap-4">
           {/* item */}

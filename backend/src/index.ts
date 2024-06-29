@@ -1,5 +1,5 @@
 import express from "express";
-import { Request, Response } from "express-serve-static-core";
+import { Response } from "express-serve-static-core";
 import cors from "cors";
 import { v2 as cloudinary } from "cloudinary";
 import notification from "./routes/notification";

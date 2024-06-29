@@ -10,7 +10,6 @@ import { CiImageOn } from 'react-icons/ci'
 import { IoCloseSharp } from 'react-icons/io5'
 
 import CldImage from '@/components/CldImage'
-import { AuthUserType } from '@/components/common/Post'
 
 import { User } from '@/types'
 
@@ -39,10 +38,9 @@ const CreatePost = () => {
 
   const router = useRouter()
 
-  const { data: authUser } = useQuery<AuthUserType>({
+  const { data: authUser } = useQuery<User>({
     queryKey: ['authUser'],
   })
-
   const queryClient = useQueryClient()
   const {
     mutate: PostMutation,

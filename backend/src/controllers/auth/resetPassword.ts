@@ -15,7 +15,6 @@ export const resetPassword = async (
 ) => {
   try {
     const { verify } = req.query;
-    console.log(verify);
     if (!verify) return res.status(401).json({ error: "Unauthorized" });
 
     const tokenVerify = await TokenBlacklist.findOne({ token: verify });

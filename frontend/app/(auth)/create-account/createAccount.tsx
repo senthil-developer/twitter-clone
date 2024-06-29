@@ -1,44 +1,43 @@
-"use client";
+'use client'
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 export const CreateAccount = ({ verify }: { verify: string }) => {
-  const router = useRouter();
+  const router = useRouter()
 
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const { isError, data, error, isSuccess } = useQuery({
-    queryKey: ["createAccount"],
+    queryKey: ['createAccount'],
     queryFn: async () => {
       try {
         const res = await fetch(`/api/auth/create-account?verify=${verify}`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-        });
-        const data = await res.json();
+        })
+        const data = await res.json()
 
-        if (data.error) throw new Error(data.error);
-        if (!res.ok) throw new Error(data.error);
+        if (data.error) throw new Error(data.error)
+        if (!res.ok) throw new Error(data.error)
 
         if (isSuccess) {
-          toast.success("Account created successfully");
-          queryClient.invalidateQueries({ queryKey: ["authUser"] });
-          return router.push("/");
+          toast.success('Account created successfully')
+          queryClient.invalidateQueries({ queryKey: ['authUser'] })
+          return router.push('/')
         }
 
-        console.log(data);
-        return data;
+        return data
       } catch (err) {
-        throw err;
+        throw err
       }
     },
     retry: false,
-  });
+  })
 
   return (
     <div>
@@ -57,5 +56,5 @@ export const CreateAccount = ({ verify }: { verify: string }) => {
         )}
       </div>
     </div>
-  );
-};
+  )
+}

@@ -8,12 +8,12 @@ const nextConfig = {
         //   destination: "https://api-twitter.up.railway.app/api/:path*",
         // },
         {
-          source: "/api/:path*",
+          source: '/api/:path*',
           destination: `${process.env.SERVER_URL}/api/:path*`,
         },
       ],
-    };
+    }
   },
-};
+}
 
-export default nextConfig;
+export default nextConfig
