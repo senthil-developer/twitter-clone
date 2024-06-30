@@ -1,21 +1,19 @@
-import { Metadata } from "next";
-import { CreateAccount } from "./createAccount";
-import Link from "next/link";
+import { Metadata } from 'next'
+import Link from 'next/link'
+
+import { CreateAccount } from './createAccount'
 
 export const metadata: Metadata = {
-  title: "create account",
-  description: "create account Page",
-  icons: {
-    icon: "/next.svg",
-  },
-};
+  title: 'create account',
+  description: 'create account Page',
+}
 
 const createAccountPage = ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined }
 }) => {
-  const verify = searchParams.verify as string;
+  const verify = searchParams.verify as string
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
@@ -24,17 +22,17 @@ const createAccountPage = ({
       ) : (
         <>
           <div className="max-w-7xl mx-auto h-full flex flex-col gap-2 items-center justify-center">
-            <h1 className="text-4xl font-extrabold">{"Verify your account"}</h1>
+            <h1 className="text-4xl font-extrabold">{'Verify your account'}</h1>
             <p className="text-lg">
-              {"Check your email for activate your account"}
+              {'Check your email for activate your account'}
             </p>
             <p className="text-lg">
               {"If you don't see an email from us, check your spam folder"}
             </p>
             <p className="text-lg">
-              {"If you still can't find it,"}{" "}
+              {"If you still can't find it,"}{' '}
               <Link
-                href={"mailto:twitter.acc.app@gmail.com"}
+                href={'mailto:twitter.acc.app@gmail.com'}
                 className="bg-sky-300 rounded-md shadow-sm shadow-primary"
                 target="_blank"
               >
@@ -45,7 +43,7 @@ const createAccountPage = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default createAccountPage;
+export default createAccountPage

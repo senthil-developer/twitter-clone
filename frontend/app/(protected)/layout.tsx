@@ -7,11 +7,11 @@ export default function ProtectedLayout({
   children: React.ReactNode
 }>) {
   return (
-    <div className="flex dark:bg-black dark:text-white bg-white text-black ">
+    <div className="flex dark:bg-black dark:text-white bg-white text-black max-w-7xl  mx-auto">
       <aside className="sticky top-0 left-0 max-h-screen">
         <Sidebar />
       </aside>
-      <section className="max-w-7xl mx-auto h-full flex-1 ">{children}</section>
+      <section className="h-full flex-1 ">{children}</section>
       <aside>
         <RightPanel />
       </aside>

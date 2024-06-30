@@ -12,7 +12,6 @@ import { IoCalendarOutline } from 'react-icons/io5'
 import { MdEdit } from 'react-icons/md'
 
 import { formatMemberSinceDate } from '@/lib/utils/date'
-import { POSTS } from '@/lib/utils/db/dummy'
 
 import CldImage from '@/components/CldImage'
 import Posts from '@/components/common/Posts'
@@ -53,10 +52,10 @@ export const UserProfile = ({ username }: { username: string }) => {
   const { updateProfile, isPending: isUpdatePending } = useUpdateProfile()
 
   const [coverImg, setCoverImg] = useState<string | null>(null)
+
   const [profileImg, setProfileImg] = useState<string | null>(null)
-  const [feedType, setFeedType] = useState<
-    'forYou' | 'following' | 'posts' | 'likes'
-  >('posts')
+
+  const [feedType, setFeedType] = useState<'posts' | 'likes'>('posts')
 
   const coverImgRef = useRef<HTMLInputElement>(null)
   const profileImgRef = useRef<HTMLInputElement>(null)
@@ -107,9 +106,7 @@ export const UserProfile = ({ username }: { username: string }) => {
 
                 <div className="flex flex-col">
                   <p className="font-bold text-lg">{user?.fullName}</p>
-                  <span className="text-sm text-slate-500">
-                    {POSTS?.length} posts
-                  </span>
+                  <span className="text-sm ">{user.postsLength} posts</span>
                 </div>
               </div>
               {/* COVER IMG */}

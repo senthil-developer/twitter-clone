@@ -1,21 +1,19 @@
-import { Metadata } from "next";
-import { ResetPassword } from "./ResetPassword";
-import Link from "next/link";
+import { Metadata } from 'next'
+import Link from 'next/link'
+
+import { ResetPassword } from './ResetPassword'
 
 export const metadata: Metadata = {
-  title: "Forget-password",
-  description: "Forget-passwordPage",
-  icons: {
-    icon: "/next.svg",
-  },
-};
+  title: 'reset password',
+  description: 'reset password Page',
+}
 
 const ResetPasswordPage = ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: { [key: string]: string | string[] | undefined }
 }) => {
-  const verify = searchParams.verify as string;
+  const verify = searchParams.verify as string
   return (
     <div className="flex h-full w-full flex-col items-center justify-center">
       {verify ? (
@@ -24,18 +22,18 @@ const ResetPasswordPage = ({
         <>
           <div className="max-w-7xl mx-auto h-full flex flex-col gap-2 items-center justify-center">
             <h1 className="text-4xl font-extrabold">
-              {"mail sended to  your account"}
+              {'mail sended to  your account'}
             </h1>
             <p className="text-lg">
-              {"Check your email for reset your password"}
+              {'Check your email for reset your password'}
             </p>
             <p className="text-lg">
               {"If you don't see an email from us, check your spam folder"}
             </p>
             <p className="text-lg">
-              {"If you still can't find it,"}{" "}
+              {"If you still can't find it,"}{' '}
               <Link
-                href={"mailto:twitter.acc.app@gmail.com"}
+                href={'mailto:twitter.acc.app@gmail.com'}
                 className="bg-sky-300 rounded-md shadow-sm shadow-primary"
                 target="_blank"
               >
@@ -46,7 +44,7 @@ const ResetPasswordPage = ({
         </>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ResetPasswordPage;
+export default ResetPasswordPage

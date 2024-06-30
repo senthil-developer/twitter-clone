@@ -11,7 +11,9 @@ export interface UserTypes extends Document {
   coverImg: string;
   bio: string;
   link: string;
+  postsLength: string;
   likedPosts: mongoose.Types.ObjectId[];
+  bookmarks: mongoose.Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -76,6 +78,17 @@ const userSchema: Schema<UserTypes> = new mongoose.Schema(
         default: [],
       },
     ],
+    bookmarks: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Post",
+        default: [],
+      },
+    ],
+    postsLength: {
+      type: String,
+      default: "0",
+    },
   },
   {
     timestamps: true,

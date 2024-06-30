@@ -1,13 +1,11 @@
-import { Metadata } from "next";
-import { ForgetPassword } from "./forgetPassword";
+import { Metadata } from 'next'
+
+import { ForgetPassword } from './forgetPassword'
 
 export const metadata: Metadata = {
-  title: "Forget-password",
-  description: "Forget-passwordPage",
-  icons: {
-    icon: "/next.svg",
-  },
-};
+  title: 'forget password',
+  description: 'Forget password Page',
+}
 
 const ForgetPasswordPage = () => {
   return (
@@ -16,7 +14,7 @@ const ForgetPasswordPage = () => {
 
       <ForgetPassword />
     </div>
-  );
-};
+  )
+}
 
-export default ForgetPasswordPage;
+export default ForgetPasswordPage

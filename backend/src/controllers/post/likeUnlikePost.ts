@@ -11,7 +11,7 @@ export const likeUnlikePost = async (req: Request, res: Response) => {
 
     const post = await Post.findById(postId);
 
-    if (!post) return res.status(404).json({ msg: "post not found" });
+    if (!post) return res.status(404).json({ error: "post not found" });
 
     const userLikedPost = post.likes?.includes(
       userId as unknown as Types.ObjectId

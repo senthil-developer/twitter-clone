@@ -2,7 +2,6 @@
 
 import CldImage from '../CldImage'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import { toast } from 'react-hot-toast'
@@ -10,7 +9,7 @@ import { BiRepost } from 'react-icons/bi'
 import { FaRegComment } from 'react-icons/fa'
 import { FaRegHeart } from 'react-icons/fa'
 import { FaTrash } from 'react-icons/fa'
-import { FaRegBookmark } from 'react-icons/fa6'
+import { IoBookmark, IoBookmarkOutline } from 'react-icons/io5'
 
 import { formatPostDate } from '@/lib/utils/date'
 
@@ -48,6 +47,7 @@ const Post: React.FC<Props> = ({ post }) => {
   const queryClient = useQueryClient()
   const postOwner = post.user
   const isLiked = post.likes.includes(authUser?._id!)
+  const isBookmarked = authUser?.bookmarks?.includes(post?._id)
 
   const isMyPost = authUser?._id === post?.user._id
 
@@ -105,6 +105,30 @@ const Post: React.FC<Props> = ({ post }) => {
     },
   })
 
+  const { mutate: bookmarkPost, isPending: isBookmarking } = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await fetch(`/api/posts/bookmark/${post._id}`, {
+          method: 'POST',
+        })
+        const data = await res.json()
+        if (!res.ok) {
+          throw new Error(data.error || 'Something went wrong')
+        }
+        return data
+      } catch (error) {
+        throw error
+      }
+    },
+    onSuccess: () => {
+      toast.success('Post bookmarked successfully')
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+    onError: (error) => {
+      toast.error(error.message)
+    },
+  })
+
   const { mutate: commentPost, isPending: isCommenting } = useMutation({
     mutationFn: async () => {
       try {
@@ -150,8 +174,13 @@ const Post: React.FC<Props> = ({ post }) => {
     likePost()
   }
 
-  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
+  const handleBookmarkPost = () => {
+    if (isBookmarking) return
+    bookmarkPost()
+  }
 
+  const dummyCldProfileImg = process.env.NEXT_PUBLIC_DUMMY_CLD_PROFILE_IMG!
+  console.log(authUser)
   return (
     <>
       <div className="flex gap-2 items-start p-4 border-b border-gray-700">
@@ -179,7 +208,7 @@ const Post: React.FC<Props> = ({ post }) => {
             <Link href={`/${postOwner.username}`} className="font-bold">
               {postOwner.fullName}
             </Link>
-            <span className="text-gray-700 flex gap-1 text-sm">
+            <span className="opacity-60 flex gap-1 text-sm">
               <Link href={`/${postOwner.username}`}>@{postOwner.username}</Link>
               <span>·</span>
               <span>{formattedDate}</span>
@@ -258,7 +287,7 @@ const Post: React.FC<Props> = ({ post }) => {
                             <span className="font-bold">
                               {comment.user.fullName}
                             </span>
-                            <span className="text-gray-700 text-sm">
+                            <span className="text-sm">
                               @{comment.user.username}
                             </span>
                           </div>
@@ -313,8 +342,18 @@ const Post: React.FC<Props> = ({ post }) => {
                 </span>
               </div>
             </div>
-            <div className="flex w-1/3 justify-end gap-2 items-center">
-              <FaRegBookmark className="w-4 h-4 text-slate-500 cursor-pointer" />
+            <div
+              className="flex w-1/3 justify-end gap-2 items-center"
+              onClick={handleBookmarkPost}
+            >
+              {isBookmarking && <LoadingSpinner size="sm" />}
+
+              {!isBookmarked && !isBookmarking && (
+                <IoBookmarkOutline className="w-4 h-4 cursor-pointer text-slate-500 group-hover:text-pink-500" />
+              )}
+              {isBookmarked && !isBookmarking && (
+                <IoBookmark className="w-4 h-4 cursor-pointer text-pink-500 " />
+              )}
             </div>
           </div>
         </div>

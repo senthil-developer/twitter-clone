@@ -1,16 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { getServerSideUser } from './lib/getServerSideUser'
-import { User } from './types'
 
 export async function middleware(req: NextRequest) {
   const siteUrl = process.env.SITE_URL
 
   const { nextUrl, cookies } = req
-  const user = (await getServerSideUser(cookies)) as User
-  console.log('middleware', user.username)
+  const { unAuthUser } = await getServerSideUser(cookies)
+
   if (
-    user &&
+    !unAuthUser &&
     [
       '/login',
       '/verify',
@@ -24,7 +23,7 @@ export async function middleware(req: NextRequest) {
   }
 
   if (
-    !user &&
+    unAuthUser &&
     ['/', '/notifications', '/setting', '/search'].includes(nextUrl.pathname)
   ) {
     return NextResponse.redirect(`${siteUrl}/login`)
@@ -34,5 +33,16 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|:path*).*)'],
+  matcher: [
+    '/',
+    '/login',
+    '/verify',
+    '/signup',
+    '/create-account',
+    '/forget-password',
+    '/reset-password',
+    '/notifications',
+    '/setting',
+    '/search',
+  ],
 }

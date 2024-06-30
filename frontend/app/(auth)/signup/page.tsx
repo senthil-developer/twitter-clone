@@ -1,13 +1,14 @@
-import SignUpPage from "./signUpPage";
-import { Metadata } from "next";
+import { Metadata } from 'next'
+
+import SignUpPage from './signUpPage'
 
 export const metadata: Metadata = {
-  title: "Signup",
-  description: "SignupPage",
-};
+  title: 'Signup',
+  description: 'Signup Page',
+}
 
 const SignupPage = () => {
-  return <SignUpPage />;
-};
+  return <SignUpPage />
+}
 
-export default SignupPage;
+export default SignupPage

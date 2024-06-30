@@ -2,13 +2,21 @@
 
 import CldImage from '../CldImage'
 import XSvg from '../svgs/X'
-import { useMutation, useQuery } from '@tanstack/react-query'
-import Image from 'next/image'
+import { useQuery } from '@tanstack/react-query'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { BiLogOut } from 'react-icons/bi'
-import { FaUser } from 'react-icons/fa'
-import { IoNotifications, IoSearch, IoSettings } from 'react-icons/io5'
-import { MdHomeFilled } from 'react-icons/md'
+import { GoHome, GoHomeFill } from 'react-icons/go'
+import {
+  IoBookmark,
+  IoBookmarkOutline,
+  IoNotifications,
+  IoNotificationsOutline,
+  IoPerson,
+  IoPersonOutline,
+  IoSettings,
+  IoSettingsOutline,
+} from 'react-icons/io5'
 
 import { cn } from '@/lib/utils'
 
@@ -37,44 +45,55 @@ const Sidebar = () => {
   const navItems = [
     {
       name: 'Home',
-      icon: <MdHomeFilled className="size-6" />,
+      icon: <GoHome className="size-6" />,
+      iconFill: <GoHomeFill className="size-6" />,
       link: '/',
     },
     {
-      name: 'Search',
-      icon: <IoSearch className="size-6" />,
-      link: '/search',
+      name: 'Bookmark',
+      icon: <IoBookmarkOutline className="size-6" />,
+      iconFill: <IoBookmark className="size-6" />,
+      link: '/bookmark',
     },
     {
       name: 'Profile',
-      icon: <FaUser className="size-6" />,
+      icon: <IoPersonOutline className="size-6" />,
+      iconFill: <IoPerson className="size-6" />,
       link: `/${data?.username}`,
     },
     {
       name: 'Notifications',
-      icon: <IoNotifications className="size-6" />,
+      icon: <IoNotificationsOutline className="size-6" />,
+      iconFill: <IoNotifications className="size-6" />,
       link: '/notifications',
     },
     {
       name: 'Setting',
-      icon: <IoSettings className="size-6" />,
+      icon: <IoSettingsOutline className="size-6 " />,
+      iconFill: <IoSettings className="size-6 " />,
       link: '/setting',
     },
   ]
 
+  const pathname = usePathname()
+
   return (
     <>
       {/* mobile nav bar */}
-      <ul className="flex sm:hidden fixed bottom-0 left-0 items-center justify-between w-full px-1 ">
+      <ul className="flex sm:hidden fixed bottom-0 left-0 items-center justify-evenly w-full bg-white/80 dark:bg-black/80">
         {navItems.map((item, index) => (
           <li key={index} className="flex justify-center md:justify-start">
             <nav>
               <Link
                 href={item.link}
-                className="flex gap-3 items-center hover:bg-sky-300 transition-all rounded-full duration-300 p-2 max-w-fit cursor-pointer"
+                className={cn(
+                  'flex gap-3 items-center hover:bg-sky-300 transition-all rounded-full duration-200 p-2 max-w-fit',
+                  pathname === item.link &&
+                    'border-sky-300 border-2 hover:bg-sky-300/70'
+                )}
               >
-                {item.icon}
-                <span className="text-lg max-md:hidden block">{item.name}</span>
+                {pathname === item.link ? item.iconFill : item.icon}
+                <span className="sr-only">{item.name}</span>
               </Link>
             </nav>
           </li>
@@ -88,7 +107,7 @@ const Sidebar = () => {
             <XSvg className="px-2 w-12 h-12 rounded-full dark:fill-white fill-black hover:bg-sky-300" />
             <span className="sr-only">twitter logo</span>
           </Link>
-          <ul className="flex flex-col gap-3 mt-4">
+          <ul className="flex flex-col gap-3 mt-4 bg-white/80 dark:bg-black/80">
             {navItems.map((item, index) => (
               <li
                 key={index}
@@ -100,9 +119,13 @@ const Sidebar = () => {
                 <nav>
                   <Link
                     href={item.link}
-                    className="flex gap-3 items-center hover:bg-sky-300 transition-all rounded-full duration-300 p-2 max-w-fit cursor-pointer"
+                    className={cn(
+                      'flex gap-3 items-center hover:bg-sky-300 transition-all rounded-full duration-200 p-2 max-w-fit',
+                      pathname === item.link &&
+                        'border-sky-300 border-2 hover:bg-sky-300/70'
+                    )}
                   >
-                    {item.icon}
+                    {pathname === item.link ? item.iconFill : item.icon}
                     <span className="text-lg max-md:hidden block">
                       {item.name}
                     </span>
@@ -114,7 +137,7 @@ const Sidebar = () => {
           {data && (
             <Link
               href={`/${data.username}`}
-              className="mt-auto mb-10 flex gap-2 items-start transition-all duration-300 hover:bg-[#181818] py-2 px-4 rounded-full"
+              className="mt-auto mb-10 flex gap-2 items-start transition-all duration-200 hover:bg-[#181818] py-2 px-4 rounded-full"
             >
               <div className="flex w-full">
                 <div className="size-8 rounded-full relative bg-sky-300 ">

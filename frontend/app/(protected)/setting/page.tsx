@@ -1,16 +1,18 @@
-import { Metadata } from "next";
+import { Metadata } from 'next'
+
+import { SettingPage } from './SettingPage'
 
 export const metadata: Metadata = {
-  title: "Setting",
-  description: "SettingPage",
-};
+  title: 'setting',
+  description: 'Setting Page',
+}
 
-const SettingPage = () => {
+const settingPage = () => {
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center">
-      <h1 className=""> Setting page </h1>
+    <div className="flex h-[100vh] items-center w-full">
+      <SettingPage />
     </div>
-  );
-};
+  )
+}
 
-export default SettingPage;
+export default settingPage

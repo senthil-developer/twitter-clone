@@ -7,7 +7,7 @@ import { useEffect } from 'react'
 import Post from './Post'
 
 interface Props {
-  feedType: 'forYou' | 'following' | 'posts' | 'likes'
+  feedType: 'forYou' | 'following' | 'posts' | 'likes' | 'bookmark'
   username?: string
   userId?: string
 }
@@ -19,6 +19,8 @@ const Posts = ({ feedType, username }: Props) => {
         return '/api/posts'
       case 'following':
         return '/api/posts/following'
+      case 'bookmark':
+        return '/api/posts/bookmark'
       case 'posts':
         return `/api/posts/${username}/posts`
       case 'likes':
@@ -57,6 +59,14 @@ const Posts = ({ feedType, username }: Props) => {
     refetch()
   }, [feedType, refetch, username])
 
+  const noPost = {
+    posts: 'No posts in this account.',
+    forYou: 'No posts to show. Follow some people!',
+    bookmark: 'No bookmarks in this account.',
+    following: 'Not following anyone.',
+    likes: 'No likes in this account.',
+  }
+
   return (
     <>
       {(isLoading || isRefetching) && (
@@ -67,7 +77,9 @@ const Posts = ({ feedType, username }: Props) => {
         </div>
       )}
       {!isLoading && !isRefetching && posts?.length === 0 && (
-        <p className="text-center my-4">No posts in this tab. Switch 👻</p>
+        <div className="flex items-center justify-center w-full">
+          <p className="text-center my-4">{noPost[feedType]}👻</p>
+        </div>
       )}
       {!isLoading && !isRefetching && posts && (
         <div>

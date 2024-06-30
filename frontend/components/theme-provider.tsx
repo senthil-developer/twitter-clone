@@ -22,7 +22,9 @@ export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
         <div className="fixed top-2 right-2 z-10 hidden md:block">
           <DarkModeToggle />
         </div>
-        {children}
+        <div className="dark:bg-black dark:text-white bg-white text-black w-full">
+          {children}
+        </div>
         <Toaster />
       </QueryClientProvider>
     </NextThemesProvider>

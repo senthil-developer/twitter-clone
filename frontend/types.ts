@@ -11,8 +11,10 @@ export interface User {
   bio: string
   link: string
   likedPosts: string[]
+  bookmarks: string[]
   createdAt: string
   updatedAt: string
+  postsLength: string
 }
 
 export interface Notification {

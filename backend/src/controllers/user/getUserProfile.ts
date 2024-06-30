@@ -1,5 +1,6 @@
 import { type Request, type Response } from "express-serve-static-core";
 import user from "../../models/user-model";
+import Post from "../../models/post-model";
 
 export const getUserProfile = async (req: Request, res: Response) => {
   const { username } = req.params;
@@ -10,6 +11,12 @@ export const getUserProfile = async (req: Request, res: Response) => {
         error: "User not found",
       });
     }
+    const posts = await Post.find({ user: userProfile._id });
+
+    userProfile.postsLength = posts.length.toString();
+
+    await userProfile.save();
+
     res.status(200).json(userProfile);
   } catch (error) {
     console.error(error);

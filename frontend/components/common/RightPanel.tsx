@@ -5,8 +5,6 @@ import { useQuery } from '@tanstack/react-query'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { USERS_FOR_RIGHT_PANEL } from '@/lib/utils/db/dummy'
-
 import { useFollow } from '@/hooks/useFollow'
 import { User } from '@/types'
 
@@ -34,8 +32,6 @@ const RightPanel = () => {
     },
   })
   const { follow, isPending } = useFollow()
-
-  if (data?.length === 0) return <div className="md:w-64 w-0"></div>
 
   return (
     <div className="hidden lg:block my-4 mx-2 ">

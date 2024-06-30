@@ -8,10 +8,7 @@ import Posts from '@/components/common/Posts'
 import CreatePost from './CreatePost'
 
 const HomePage = () => {
-  const [feedType, setFeedType] = useState<
-    'forYou' | 'following' | 'posts' | 'likes'
-  >('forYou')
-
+  const [feedType, setFeedType] = useState<'forYou' | 'following'>('forYou')
   return (
     <>
       <div className="flex-[4_4_0] mr-auto border-r border-gray-700 min-h-screen">
