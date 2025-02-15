@@ -37,7 +37,7 @@ async function mail({ userEmail, redirect_url, type }: Props) {
       service: "gmail",
       auth: {
         type: "OAuth2",
-        user: "twitter.acc.app@gmail.com",
+        user: process.env.FROM_USER,
         clientId,
         clientSecret,
         refreshToken,
@@ -49,7 +49,7 @@ async function mail({ userEmail, redirect_url, type }: Props) {
 
     if (type === "createAcc") {
       mailOptions = {
-        from: "twitter.acc.app@gmail.com",
+        from: process.env.FROM_USER,
         to: userEmail,
         subject: "create account",
         text: "This is a test email sent from Nodemailer with Gmail.",
@@ -58,7 +58,7 @@ async function mail({ userEmail, redirect_url, type }: Props) {
     }
     if (type === "resetPassword") {
       mailOptions = {
-        from: "twitter.acc.app@gmail.com",
+        from: process.env.FROM_USER,
         to: userEmail,
         subject: "Reset Your Password",
         text: "This is a test email sent from Nodemailer with Gmail.",
@@ -67,7 +67,7 @@ async function mail({ userEmail, redirect_url, type }: Props) {
     }
     if (type === "verify") {
       mailOptions = {
-        from: "twitter.acc.app@gmail.com",
+        from: process.env.FROM_USER,
         to: userEmail,
         subject: "Verify Your Account",
         text: "This is a test email sent from Nodemailer with Gmail.",
