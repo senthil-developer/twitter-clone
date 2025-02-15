@@ -3,7 +3,7 @@
   "main": "src/index.ts",
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
-    "build": "npm i --save-dev @types/jsonwebtoken && tsc",
+    "build": "tsc",
     "start": "node dist/index.js"
   },
   "devDependencies": {
