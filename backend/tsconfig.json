@@ -10,6 +10,7 @@
     "skipLibCheck": true,
     "types": ["node", "express"] // Ensure that TypeScript knows to use the Node and Express type definitions.
   },
-  "include": ["src/**/*", "types/request.d.ts"],
+
+  "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules"]
 }

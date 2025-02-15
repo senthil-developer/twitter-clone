@@ -4,7 +4,8 @@
   "scripts": {
     "dev": "nodemon --watch src --exec ts-node src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "postinstall": "npm install @types/express @types/node && npm ls @types/express @types/node"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
