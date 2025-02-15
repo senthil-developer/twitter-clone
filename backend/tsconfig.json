@@ -7,7 +7,7 @@
     "rootDir": "./src",
     "strict": false, // Enable all strict type-checking options.
     "esModuleInterop": true, // This will allow you to use default imports with CommonJS modules.
-    "skipLibCheck": false // this option will skip type checking all .d.ts files.
+    "skipLibCheck": true // this option will skip type checking all .d.ts files.
   },
   "include": ["src/**/*", "types/**/*"],
   "exclude": ["node_modules"]
